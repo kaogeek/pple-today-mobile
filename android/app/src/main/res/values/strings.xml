@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">MFP Today</string>
+    <string name="facebook_app_id">805338947265037</string>
+    <string name="fb_login_protocol_scheme">fb805338947265037</string>
+    <string name="facebook_client_token">f1fdc45b194491110318083b760bf17c</string>
+    <string name="asset_statements">
+        [{
+            \"include\": [\"https://today.moveforwardparty.org/.well-known/assetlinks.json\"],
+            \"target\": {
+                \"namespace\": \"android_app\",
+                \"site\": \"https://today.moveforwardparty.org/\"
+            }
+        }]
+    </string>
+</resources>
