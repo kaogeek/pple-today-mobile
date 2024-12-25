@@ -17,6 +17,7 @@ class UserGeneratedContentController extends GetxController {
   ManipulateModel manipulatePageModel = ManipulateModel();
 
   Future<void> fetchHidePost(String postId) async {
+    debugPrint("postId : $postId", wrapWidth: 1024);
     try {
       String uid = _box.read(StorageKeys.uid) ?? '';
       String token = _box.read(StorageKeys.token) ?? '';

@@ -1,4 +1,3 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:upgrader/upgrader.dart';
@@ -13,7 +12,7 @@ import '../today_page/today_page.dart';
 import 'widgets/dashboard_bottom_navigation_bar.dart';
 
 class DashboardPage extends GetView<DashboardController> {
-  DashboardPage({Key? key}) : super(key: key);
+  DashboardPage({super.key});
 
   final _screen = [
     TodayPage(),
@@ -44,11 +43,11 @@ class DashboardPage extends GetView<DashboardController> {
   @override
   Widget build(BuildContext context) {
     return UpgradeAlert(
-      showIgnore: false,
-      showLater: false,
-      showReleaseNotes: false,
-      debugLogging: kDebugMode,
-      durationToAlertAgain: Duration.zero,
+      //   showIgnore: false,
+      //   showLater: false,
+      //   showReleaseNotes: false,
+      //   debugLogging: kDebugMode,
+      //   durationToAlertAgain: Duration.zero,
       child: _buildDashboard(),
     );
     // GetBuilder<DashboardController>(

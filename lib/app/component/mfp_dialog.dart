@@ -12,7 +12,7 @@ import 'elevated_button_component.dart';
 
 class Mfp {
   static Future<void> memberBindingDialog() async {
-    final RxBool _value = false.obs;
+    final RxBool value0 = false.obs;
 
     await Get.defaultDialog(
       backgroundColor: dashBlue,
@@ -36,7 +36,8 @@ class Mfp {
               ),
             ),
             const SizedBox(height: 16),
-            ElevatedButtonComponent(
+            // TODO: ฉันเป็นสมาชิกพรรคประชาชน
+           /*  ElevatedButtonComponent(
               height: 48,
               padding: const EdgeInsets.symmetric(vertical: 4),
               primary: kPrimaryColor,
@@ -53,7 +54,7 @@ class Mfp {
                   arguments: {'AUTO_TAP_BINDING': true},
                 );
               },
-            ),
+            ), */
             ElevatedButtonComponent(
               height: 48,
               padding: const EdgeInsets.symmetric(vertical: 4),
@@ -91,16 +92,16 @@ class Mfp {
             Obx(() => CheckboxListTile(
                   controlAffinity: ListTileControlAffinity.leading,
                   contentPadding: EdgeInsets.zero,
-                  value: _value.value,
+                  value: value0.value,
                   onChanged: (value) async {
-                    final _box = GetStorage();
+                    final box = GetStorage();
 
                     value ?? false
-                        ? await _box.write(StorageKeys.popUpMemberShip, value)
-                        : await _box.remove(StorageKeys.popUpMemberShip);
+                        ? await box.write(StorageKeys.popUpMemberShip, value)
+                        : await box.remove(StorageKeys.popUpMemberShip);
 
-                    _value.toggle();
-                    _value.refresh();
+                    value0.toggle();
+                    value0.refresh();
                   },
                   title: const Text(
                     'ไม่ต้องการแสดงอีก',

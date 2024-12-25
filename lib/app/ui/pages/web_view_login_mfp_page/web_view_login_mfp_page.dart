@@ -14,7 +14,7 @@ import '../../utils/colors.dart';
 import '../../utils/storage_keys.dart';
 
 class WebViewLoginMfpPage extends GetView<WebViewLoginMfpController> {
-  WebViewLoginMfpPage({Key? key}) : super(key: key);
+  WebViewLoginMfpPage({super.key});
 
   @override
   WebViewLoginMfpController controller = Get.put(WebViewLoginMfpController());
@@ -39,43 +39,46 @@ class WebViewLoginMfpPage extends GetView<WebViewLoginMfpController> {
           ),
         ),
       ),
-      body: GetBuilder<WebViewLoginMfpController>(
-        init: WebViewLoginMfpController(),
-        initState: (_) {},
-        builder: (_) {
-          return Stack(
-            children: [
-              WebView(
-                initialUrl: controller.url,
-                javascriptMode: JavascriptMode.unrestricted,
-                onPageFinished: (finish) {
-                  controller.isLoading = false;
-                  controller.update();
+      body: Stack(
+        children: [
+          WebViewWidget(
+            controller: WebViewController()
+              ..setJavaScriptMode(JavaScriptMode.unrestricted)
+              ..setNavigationDelegate(NavigationDelegate(
+                onNavigationRequest: _navigationDelegate,
+                onProgress: (int progress) {
+                  controller.isProgress.value = progress / 100;
                 },
-                onProgress: (progress) {
-                  controller.isProgress = progress / 100;
-                  controller.update();
+                onPageStarted: (String url) {
+                  controller.isLoading.value = true;
                 },
-                navigationDelegate: _navigationDelegate,
-              ),
-              if (controller.isLoading)
-                LinearProgressIndicator(
+                onPageFinished: (String url) {
+                  controller.isLoading.value = false;
+                },
+                onHttpError: (HttpResponseError error) {
+                  debugPrint("HttpResponseError : $error", wrapWidth: 1024);
+                },
+                onWebResourceError: (WebResourceError error) {
+                  debugPrint("WebResourceError : $error", wrapWidth: 1024);
+                },
+              ))
+              ..loadRequest(Uri.parse(controller.url)),
+          ),
+          Obx(() => controller.isLoading.value
+              ? LinearProgressIndicator(
                   backgroundColor: Colors.transparent,
-                  valueColor: const AlwaysStoppedAnimation<Color>(
-                    kPrimaryColor,
-                  ),
-                  value: controller.isProgress,
-                ),
-            ],
-          );
-        },
+                  valueColor: const AlwaysStoppedAnimation<Color>(kPrimaryColor),
+                  value: controller.isProgress.value,
+                )
+              : SizedBox.shrink()),
+        ],
       ),
     );
   }
 
   Future<NavigationDecision> _navigationDelegate(NavigationRequest navigation) async {
-    final _url = Uri.decodeComponent(navigation.url);
-    log('NAVIGATION_URL: $_url');
+    final url = Uri.decodeComponent(navigation.url);
+    log('NAVIGATION_URL: $url');
 
     /// Login With MFP
     // bool isLoginSuccess = _url.startsWith('https://accounts.moveforwardparty.org/account/login/callback?token=');
@@ -84,12 +87,16 @@ class WebViewLoginMfpPage extends GetView<WebViewLoginMfpController> {
     // }
 
     /// Binding MerberShip MFP
-    bool isProcessing = _url.startsWith('https://today.pplethai.org/processing');
-    bool isProcessingAct = _url.startsWith('https://today.pplethai.org/process/act');
+    bool isProcessing = url.startsWith('https://today.peoplesparty.or.th/processing');
+    bool isProcessingAct = url.startsWith('https://today.peoplesparty.or.th/process/act');
 
+    debugPrint("_url : $url", wrapWidth: 1024);
     if (isProcessing) {
-      String queryEncode = _url.replaceFirst('https://today.pplethai.org/processing?', '');
+      debugPrint("isProcessing : true", wrapWidth: 1024);
+      String queryEncode = url.replaceFirst('https://today.peoplesparty.or.th/processing?', '');
+
       Map queryMap = Uri.splitQueryString(queryEncode);
+      debugPrint("queryMap : $queryMap", wrapWidth: 1024);
 
       BaseModel result = await controller.fetchBindingMember(queryMap['token']);
 
@@ -136,7 +143,8 @@ class WebViewLoginMfpPage extends GetView<WebViewLoginMfpController> {
           break;
       }
     } else if (isProcessingAct) {
-      String queryEncode = _url.replaceFirst('https://today.pplethai.org/process/act?', '');
+      debugPrint("isProcessingAct : true", wrapWidth: 1024);
+      String queryEncode = url.replaceFirst('https://today.peoplesparty.or.th/process/act?', '');
       Map queryMap = Uri.splitQueryString(queryEncode);
 
       if (queryMap['actid'] == null || queryMap['actid'].isEmpty) {
@@ -144,8 +152,8 @@ class WebViewLoginMfpPage extends GetView<WebViewLoginMfpController> {
         return NavigationDecision.prevent;
       }
 
-      GetStorage _box = GetStorage();
-      await _box.write(StorageKeys.uidAct, queryMap['actid']);
+      GetStorage box = GetStorage();
+      await box.write(StorageKeys.uidAct, queryMap['actid']);
 
       Get.back(result: 'ผูกสมาชิกสำเร็จ');
     }

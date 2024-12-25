@@ -12,11 +12,12 @@ import '../../../data/services/dependency_injection.dart';
 import '../../../routes/app_routes.dart';
 import '../../utils/assets.dart';
 import '../../utils/colors.dart';
+import '../../utils/environment.dart';
 import '../../utils/storage_keys.dart';
 import 'widgets/animated_splash.dart';
 
 class SplashPage extends StatelessWidget {
-  const SplashPage({Key? key}) : super(key: key);
+  const SplashPage({super.key});
 
   Future<void> onInit() async {
     Intl.defaultLocale = 'th';
@@ -33,21 +34,29 @@ class SplashPage extends StatelessWidget {
       sound: true,
     );
     FirebaseMessaging firebaseMessaging = FirebaseMessaging.instance;
-    String? _tokenFCM = await firebaseMessaging.getToken();
+    // TODO: imp firebaseMessaging
+    try {
+      String? tokenFCM = await firebaseMessaging.getToken();
+      if (tokenFCM != null) {
+        await GetStorage().write(StorageKeys.tokenFCM, tokenFCM);
+        debugPrint('-- TokenFCM: $tokenFCM\n');
+      }
+    } catch (e) {
+      debugPrint('-- TokenFCM: $e\n');
+    }
 
     if (GetPlatform.isIOS) {
       String? apnsToken = await firebaseMessaging.getAPNSToken();
       debugPrint('\n-- APNSToken: $apnsToken\n');
     }
 
-    await GetStorage().write(StorageKeys.tokenFCM, _tokenFCM);
-    debugPrint('-- TokenFCM: $_tokenFCM\n');
-
     String token = GetStorage().read(StorageKeys.token) ?? '';
     debugPrint('-- TOKEN: $token\n');
 
     String uid = GetStorage().read(StorageKeys.uid) ?? '';
     debugPrint('-- USER_ID: $uid\n');
+
+    debugPrint("API_URL: ${Environment.apiURL}", wrapWidth: 1024);
 
     await GetStorage().remove(StorageKeys.initLink);
     await GetStorage().remove(StorageKeys.isLoading);

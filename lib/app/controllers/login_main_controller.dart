@@ -2,14 +2,13 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
-import 'package:device_information/device_information.dart';
+// import 'package:device_information/device_information.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-import 'package:http/http.dart' as http;
 import 'package:sign_in_with_apple/sign_in_with_apple.dart';
 
 import '../component/convert_image_component.dart';
@@ -62,7 +61,7 @@ class LoginMainController extends GetxController {
     update();
 
     String tokenFCM = _box.read(StorageKeys.tokenFCM) ?? '';
-    String deviceName = await DeviceInformation.deviceName;
+    // String deviceName = await DeviceInformation.deviceName;
 
     try {
       Response response = await _service.checkEmailUser(
@@ -71,12 +70,13 @@ class LoginMainController extends GetxController {
         pass: pass,
         uid: uid,
         tokenSecretTW: tokenSecretTW,
-        deviceName: deviceName,
+        deviceName: 'deviceName',
         tokenFB: tokenFB,
         tokenFCM: tokenFCM,
         idToken: idToken,
         authToken: authToken,
       );
+      debugPrint("response.body : ${response.body}", wrapWidth: 1024);
 
       checkEmailUserModel = CheckEmailUserModel.fromJson(response.body);
 
@@ -103,13 +103,13 @@ class LoginMainController extends GetxController {
       loginEmailModel.clear();
       update();
 
-      String deviceName = await DeviceInformation.deviceName;
+      //   String deviceName = await DeviceInformation.deviceName;
       String tokenFCM = _box.read(StorageKeys.tokenFCM) ?? '';
 
       Response response = await _service.loginWithEmail(
         email: email,
         pass: pass,
-        deviceName: deviceName,
+        deviceName: 'deviceName',
         tokenFCM: tokenFCM,
       );
 
@@ -148,10 +148,9 @@ class LoginMainController extends GetxController {
   Future<void> fetchLoginWithFacebook() async {
     Loading.show();
 
-    final _userFB = await _firebaseLoginWithFacebook();
-
+    final userFB = await _firebaseLoginWithFacebook();
+    Loading.dismiss();
     if (errorCode.isNotEmpty) {
-      Loading.dismiss();
       SnackBarComponent.show(
         title: 'เกิดข้อผิดพลาด',
         message: 'ไม่สามารถเข้าสู่ระบบได้',
@@ -160,18 +159,18 @@ class LoginMainController extends GetxController {
       return;
     }
 
-    if ((_userFB.idToken ?? '').isEmpty) {
-      Loading.dismiss();
+    if ((userFB.idToken ?? '').isEmpty) {
+      //   Loading.dismiss();
       return;
     }
 
     String tokenFCM = _box.read(StorageKeys.tokenFCM) ?? '';
 
-    String deviceName = await DeviceInformation.deviceName;
+    // String deviceName = await DeviceInformation.deviceName;
 
-    if ((_userFB.email ?? '').isEmpty) {
+    if ((userFB.email ?? '').isEmpty) {
       int? status = await fetchCheckEmailUser(
-        tokenFB: _userFB.idToken,
+        tokenFB: userFB.idToken,
         mode: ModeType.facebook,
       );
 
@@ -183,24 +182,24 @@ class LoginMainController extends GetxController {
             Loading.dismiss();
             return;
           } else {
-            _userFB.email = emailTextController.text;
+            userFB.email = emailTextController.text;
 
-            int? _status = await fetchCheckEmailUser(
-              email: _userFB.email,
-              tokenFB: _userFB.idToken,
+            int? status0 = await fetchCheckEmailUser(
+              email: userFB.email,
+              tokenFB: userFB.idToken,
               mode: ModeType.facebook,
             );
 
             Loading.dismiss();
 
-            switch (_status) {
+            switch (status0) {
               case 0:
                 Get.toNamed(
                   AppRoutes.REGISTER,
                   arguments: RegisterArguments(
-                    imagePath: _userFB.imagePath ?? '',
-                    name: _userFB.name ?? '',
-                    email: _userFB.email ?? '',
+                    imagePath: userFB.imagePath ?? '',
+                    name: userFB.name ?? '',
+                    email: userFB.email ?? '',
                     type: ModeType.facebook,
                   ),
                 );
@@ -210,8 +209,8 @@ class LoginMainController extends GetxController {
                 Get.toNamed(
                   AppRoutes.ACCOUNT_MERGE,
                   arguments: ArgumentsMerge(
-                    email: _userFB.email ?? '',
-                    imgUrl: _userFB.imageUrl ?? '',
+                    email: userFB.email ?? '',
+                    imgUrl: userFB.imageUrl ?? '',
                     type: ModeType.facebook,
                   ),
                 );
@@ -228,9 +227,9 @@ class LoginMainController extends GetxController {
 
         case 1:
           Response response = await _service.loginWithFacebook(
-            deviceName: deviceName,
+            deviceName: 'deviceName',
             tokenFCM: tokenFCM,
-            tokenFB: _userFB.idToken,
+            tokenFB: userFB.idToken,
           );
 
           Loading.dismiss();
@@ -283,10 +282,11 @@ class LoginMainController extends GetxController {
       }
     } else {
       int? status = await fetchCheckEmailUser(
-        email: _userFB.email,
-        tokenFB: _userFB.idToken,
+        email: userFB.email,
+        tokenFB: userFB.idToken,
         mode: ModeType.facebook,
       );
+      debugPrint("status : $status", wrapWidth: 1024);
 
       switch (status) {
         case 0:
@@ -294,9 +294,9 @@ class LoginMainController extends GetxController {
           Get.toNamed(
             AppRoutes.REGISTER,
             arguments: RegisterArguments(
-              imagePath: _userFB.imagePath ?? '',
-              name: _userFB.name ?? '',
-              email: _userFB.email ?? '',
+              imagePath: userFB.imagePath ?? '',
+              name: userFB.name ?? '',
+              email: userFB.email ?? '',
               type: ModeType.facebook,
             ),
           );
@@ -304,9 +304,9 @@ class LoginMainController extends GetxController {
 
         case 1:
           Response response = await _service.loginWithFacebook(
-            deviceName: deviceName,
+            deviceName: 'deviceName',
             tokenFCM: tokenFCM,
-            tokenFB: _userFB.idToken,
+            tokenFB: userFB.idToken,
           );
 
           Loading.dismiss();
@@ -354,8 +354,8 @@ class LoginMainController extends GetxController {
           Get.toNamed(
             AppRoutes.ACCOUNT_MERGE,
             arguments: ArgumentsMerge(
-              email: _userFB.email ?? '',
-              imgUrl: _userFB.imageUrl ?? '',
+              email: userFB.email ?? '',
+              imgUrl: userFB.imageUrl ?? '',
               type: ModeType.facebook,
             ),
           );
@@ -379,43 +379,29 @@ class LoginMainController extends GetxController {
   }
 
   Future<UserDataSocialModel> _firebaseLoginWithFacebook() async {
-    final _firebaseAuth = FirebaseAuth.instance;
-    final _facebookAuth = FacebookAuth.instance;
+    try {
+      final facebookAuth = FacebookAuth.instance;
 
-    userDataSocialModel.clear();
-    errorCode = '';
-    update();
+      userDataSocialModel.clear();
+      errorCode = '';
+      update();
+      await FirebaseAuth.instance.signOut();
+      await facebookAuth.logOut();
 
-    LoginResult result;
+      final result = await facebookAuth.login();
 
-    result = await _facebookAuth.login(loginBehavior: LoginBehavior.webOnly);
-    // try {
-    // result = await _facebookAuth.login(loginBehavior: LoginBehavior.nativeWithFallback);
-    // } catch (e) {
-    //   result = await _facebookAuth.login(loginBehavior: LoginBehavior.webOnly);
-    // }
+      final profile = await facebookAuth.getUserData();
+      debugPrint("profile : $profile", wrapWidth: 1024);
 
-    final _tokenFB = result.accessToken?.token ?? '';
+      final tokenFB = result.accessToken?.tokenString ?? '';
 
-    if (_tokenFB.isEmpty) return userDataSocialModel;
+      if (tokenFB.isEmpty) return userDataSocialModel;
+      debugPrint("result.status : ${result.status}", wrapWidth: 1024);
 
-    http.Response response = await http.get(
-      Uri.https(
-        'graph.facebook.com',
-        '/v15.0/me',
-        {
-          'fields': 'name,picture.width(400).height(400),first_name,last_name,email',
-          'access_token': _tokenFB,
-        },
-      ),
-    );
+      if (result.status == LoginStatus.success) {
+        OAuthCredential credential = FacebookAuthProvider.credential(tokenFB);
 
-    var profile = jsonDecode(response.body);
-
-    if (result.status == LoginStatus.success) {
-      try {
-        OAuthCredential credential = FacebookAuthProvider.credential(result.accessToken!.token);
-        await _firebaseAuth.signInWithCredential(credential);
+        await FirebaseAuth.instance.signInWithCredential(credential);
 
         String source = jsonEncode(profile);
         var json = jsonDecode(source);
@@ -425,12 +411,13 @@ class LoginMainController extends GetxController {
           loginFacebookModel.picture!.data!.url!,
         );
 
-        DateTime? expiresTime = result.accessToken!.expires;
-        int expires = expiresTime.millisecondsSinceEpoch ~/ 1000;
+        // DateTime? expiresTime = result.accessToken!.expiresAt;
+        // int expires = expiresTime.millisecondsSinceEpoch ~/ 1000;
+        // TODO: token expires facebook
+        int expires = 100000;
 
         debugPrint('-- mode: FACEBOOK');
         debugPrint('-- name: ${loginFacebookModel.name}');
-        debugPrint('-- uid: ${loginFacebookModel.id}');
         debugPrint('-- email: ${loginFacebookModel.email}');
         debugPrint('-- imageUrl: ${loginFacebookModel.picture!.data!.url}');
         debugPrint('-- imagePath: ${imageFile.path}');
@@ -442,31 +429,31 @@ class LoginMainController extends GetxController {
           email: loginFacebookModel.email ?? '',
           imageUrl: loginFacebookModel.picture?.data?.url ?? '',
           imagePath: imageFile.path,
-          idToken: result.accessToken!.token,
+          idToken: tokenFB, // result.accessToken!.tokenString,
           expires: expires,
           mode: ModeType.facebook,
         );
-      } on FirebaseAuthException catch (e) {
-        switch (e.code) {
-          case "account-exists-with-different-credential":
-            errorCode = "You already have an account with us. Use correct provider";
-            break;
-
-          case 'invalid-credential':
-            errorCode = 'Error occurred while accessing credentials. Try again.';
-            break;
-
-          case "null":
-            errorCode = "Some unexpected error while trying to sign in";
-            break;
-
-          default:
-            errorCode = e.toString();
-            break;
-        }
       }
-    } else {
-      errorCode = response.body;
+    } on FirebaseAuthException catch (e) {
+      switch (e.code) {
+        case "account-exists-with-different-credential":
+          errorCode = "You already have an account with us. Use correct provider";
+          break;
+
+        case 'invalid-credential':
+          errorCode = 'Error occurred while accessing credentials. Try again.';
+          break;
+
+        case "null":
+          errorCode = "Some unexpected error while trying to sign in";
+          break;
+
+        default:
+          errorCode = e.toString();
+          break;
+      }
+    } catch (e) {
+      debugPrint("An unexpected error occurred: $e");
     }
 
     update();
@@ -525,7 +512,7 @@ class LoginMainController extends GetxController {
   Future<void> fetchLoginWithGoogle() async {
     Loading.show();
 
-    final _userGG = await _firebaseLoginWithGoogle();
+    final userGG = await _firebaseLoginWithGoogle();
 
     if (errorCode.isNotEmpty) {
       Loading.dismiss();
@@ -537,30 +524,30 @@ class LoginMainController extends GetxController {
       return;
     }
 
-    if ((_userGG.idToken ?? '').isEmpty) {
+    if ((userGG.idToken ?? '').isEmpty) {
       Loading.dismiss();
       return;
     }
 
     String tokenFCM = _box.read(StorageKeys.tokenFCM) ?? '';
 
-    String deviceName = await DeviceInformation.deviceName;
+    // String deviceName = await DeviceInformation.deviceName;
 
-    if ((_userGG.email ?? '').isEmpty) {
+    if ((userGG.email ?? '').isEmpty) {
       await _popUpInputEmail();
 
       if (emailTextController.text.isEmpty) {
         Loading.dismiss();
         return;
       } else {
-        _userGG.email = emailTextController.text;
+        userGG.email = emailTextController.text;
       }
     }
 
     int? status = await fetchCheckEmailUser(
-      email: _userGG.email,
-      idToken: _userGG.idToken,
-      authToken: _userGG.authToken,
+      email: userGG.email,
+      idToken: userGG.idToken,
+      authToken: userGG.authToken,
       mode: ModeType.google,
     );
 
@@ -570,9 +557,9 @@ class LoginMainController extends GetxController {
         Get.toNamed(
           AppRoutes.REGISTER,
           arguments: RegisterArguments(
-            imagePath: _userGG.imagePath!,
-            name: _userGG.name!,
-            email: _userGG.email!,
+            imagePath: userGG.imagePath!,
+            name: userGG.name!,
+            email: userGG.email!,
             type: ModeType.google,
           ),
         );
@@ -580,9 +567,9 @@ class LoginMainController extends GetxController {
 
       case 1:
         Response response = await _service.loginWithGoogle(
-          idToken: _userGG.idToken,
-          authToken: _userGG.authToken,
-          deviceName: deviceName,
+          idToken: userGG.idToken,
+          authToken: userGG.authToken,
+          deviceName: 'deviceName',
           tokenFCM: tokenFCM,
         );
 
@@ -631,8 +618,8 @@ class LoginMainController extends GetxController {
         Get.toNamed(
           AppRoutes.ACCOUNT_MERGE,
           arguments: ArgumentsMerge(
-            email: _userGG.email!,
-            imgUrl: _userGG.imageUrl!,
+            email: userGG.email!,
+            imgUrl: userGG.imageUrl!,
             type: ModeType.google,
           ),
         );
@@ -649,8 +636,8 @@ class LoginMainController extends GetxController {
   }
 
   Future<UserDataSocialModel> _firebaseLoginWithGoogle() async {
-    final _firebaseAuth = FirebaseAuth.instance;
-    final _googleSignIn = GoogleSignIn(
+    final firebaseAuth = FirebaseAuth.instance;
+    final googleSignIn = GoogleSignIn(
       scopes: [
         'https://www.googleapis.com/auth/contacts.readonly',
       ],
@@ -661,7 +648,7 @@ class LoginMainController extends GetxController {
     update();
 
     try {
-      final GoogleSignInAccount? googleSingInAccount = await _googleSignIn.signIn();
+      final GoogleSignInAccount? googleSingInAccount = await googleSignIn.signIn();
 
       if (googleSingInAccount != null) {
         final GoogleSignInAuthentication googleSingInAuthentication = await googleSingInAccount.authentication;
@@ -671,7 +658,7 @@ class LoginMainController extends GetxController {
           idToken: googleSingInAuthentication.idToken,
         );
 
-        final userDetail = (await _firebaseAuth.signInWithCredential(credential)).user!;
+        final userDetail = (await firebaseAuth.signInWithCredential(credential)).user!;
 
         File imageFile = await ConvertImageComponent.imageNetworkToFile(
           userDetail.photoURL!,
@@ -731,7 +718,7 @@ class LoginMainController extends GetxController {
   Future<void> fetchLoginWithApple() async {
     Loading.show();
 
-    final _userAP = await _firebaseLoginWithApple();
+    final userAP = await _firebaseLoginWithApple();
 
     if (errorCode.isNotEmpty) {
       Loading.dismiss();
@@ -743,14 +730,14 @@ class LoginMainController extends GetxController {
       return;
     }
 
-    if ((_userAP.uid ?? '').isEmpty) {
+    if ((userAP.uid ?? '').isEmpty) {
       Loading.dismiss();
       return;
     }
 
     String tokenFCM = _box.read(StorageKeys.tokenFCM) ?? '';
 
-    String deviceName = await DeviceInformation.deviceName;
+    // String deviceName = await DeviceInformation.deviceName;
 
     /* if ((_userAP.email ?? '').contains('@privaterelay.appleid.com')) {
       _userAP.email = '${_userAP.uid}@privaterelay.appleid.com';
@@ -781,9 +768,9 @@ class LoginMainController extends GetxController {
     } */
 
     int? status = await fetchCheckEmailUser(
-      email: _userAP.email,
-      idToken: _userAP.idToken,
-      uid: _userAP.uid,
+      email: userAP.email,
+      idToken: userAP.idToken,
+      uid: userAP.uid,
       mode: ModeType.apple,
     );
 
@@ -793,9 +780,9 @@ class LoginMainController extends GetxController {
         Get.toNamed(
           AppRoutes.REGISTER,
           arguments: RegisterArguments(
-            imagePath: _userAP.imagePath!,
-            name: _userAP.name!.isEmpty ? 'Today_user' : _userAP.name!,
-            email: _userAP.email!,
+            imagePath: userAP.imagePath!,
+            name: userAP.name!.isEmpty ? 'Today_user' : userAP.name!,
+            email: userAP.email!,
             type: ModeType.apple,
           ),
         );
@@ -803,13 +790,13 @@ class LoginMainController extends GetxController {
 
       case 1:
         Response response = await _service.loginWithApple(
-          uid: _userAP.uid,
-          email: _userAP.email,
-          idToken: _userAP.idToken,
-          authToken: _userAP.authToken,
-          creationTime: _userAP.creationTime,
-          lastSignInTime: _userAP.lastSignInTime,
-          deviceName: deviceName,
+          uid: userAP.uid,
+          email: userAP.email,
+          idToken: userAP.idToken,
+          authToken: userAP.authToken,
+          creationTime: userAP.creationTime,
+          lastSignInTime: userAP.lastSignInTime,
+          deviceName: 'deviceName',
           tokenFCM: tokenFCM,
         );
 
@@ -858,8 +845,8 @@ class LoginMainController extends GetxController {
         Get.toNamed(
           AppRoutes.ACCOUNT_MERGE,
           arguments: ArgumentsMerge(
-            email: _userAP.email!,
-            imgUrl: _userAP.imageUrl!,
+            email: userAP.email!,
+            imgUrl: userAP.imageUrl!,
             type: ModeType.apple,
           ),
         );
@@ -876,7 +863,7 @@ class LoginMainController extends GetxController {
   }
 
   Future<UserDataSocialModel> _firebaseLoginWithApple() async {
-    final _firebaseAuth = FirebaseAuth.instance;
+    final firebaseAuth = FirebaseAuth.instance;
 
     userDataSocialModel.clear();
     errorCode = '';
@@ -899,7 +886,7 @@ class LoginMainController extends GetxController {
           accessToken: credential.authorizationCode,
         );
 
-        final userCredential = await _firebaseAuth.signInWithCredential(authCredential);
+        final userCredential = await firebaseAuth.signInWithCredential(authCredential);
 
         final userDetail = userCredential.user!;
 

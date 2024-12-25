@@ -6,7 +6,7 @@ import '../../../utils/assets.dart';
 import '../../../utils/colors.dart';
 
 class NotificationCardAppBar extends StatelessWidget implements PreferredSizeWidget {
-  const NotificationCardAppBar({Key? key}) : super(key: key);
+  const NotificationCardAppBar({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +17,7 @@ class NotificationCardAppBar extends StatelessWidget implements PreferredSizeWid
         color: kPrimaryColor,
         onPressed: () => Get.back(),
       ),
-      title: Text(
+      title: const Text(
         'การแจ้งเตือน',
         style: TextStyle(
           fontSize: 18,
@@ -41,12 +41,13 @@ class NotificationCardAppBar extends StatelessWidget implements PreferredSizeWid
               initState: (_) {},
               builder: (controller) {
                 return TabBar(
+                  indicatorSize: TabBarIndicatorSize.tab,
                   indicator: BoxDecoration(
                     borderRadius: BorderRadius.circular(25),
                     color: kPrimaryColor,
                   ),
                   labelColor: Colors.white,
-                  labelStyle: TextStyle(
+                  labelStyle: const TextStyle(
                     fontFamily: Assets.assetsFontsAnakotmaiLight,
                     fontWeight: FontWeight.bold,
                     fontSize: 14,

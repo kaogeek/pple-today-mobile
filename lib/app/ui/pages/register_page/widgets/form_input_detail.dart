@@ -6,11 +6,11 @@ import 'package:flutter_datetime_picker_plus/flutter_datetime_picker_plus.dart' 
 import 'package:get/get.dart';
 import 'package:get/get_rx/src/rx_workers/utils/debouncer.dart';
 import 'package:intl/intl.dart';
-import 'package:mfp_app/app/ui/utils/enum.dart';
 
 import '../../../../controllers/register_controller.dart';
 import '../../../../routes/app_routes.dart';
 import '../../../utils/colors.dart';
+import '../../../utils/enum.dart';
 import '../../../utils/environment.dart';
 import '../../../utils/formatter.dart';
 import '../../../utils/log.dart';

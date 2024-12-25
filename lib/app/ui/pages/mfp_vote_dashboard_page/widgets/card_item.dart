@@ -22,12 +22,12 @@ class CardItem extends StatelessWidget {
   final bool? isResults;
 
   CardItem({
-    Key? key,
+    super.key,
     required this.topic,
     required this.tabName,
     required this.data,
     this.isResults = false,
-  }) : super(key: key);
+  });
 
   MfpVoteDashboardController controller = Get.put(MfpVoteDashboardController());
 
@@ -86,6 +86,7 @@ class CardItem extends StatelessWidget {
                                   _onTap(page, value, voteTimeOut, number);
                                 },
                                 child: Card(
+                                  color: Colors.white,
                                   shape: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(16),
                                   ),
@@ -286,12 +287,12 @@ class CardItem extends StatelessWidget {
                         return [
                           if (status == 'support' && !isEndVote(endDateTime))
                             const PopupMenuItem(
-                              child: Text('แก้ไข'),
                               value: 'edit',
+                              child: Text('แก้ไข'),
                             ),
                           const PopupMenuItem(
-                            child: Text('ลบโหวต'),
                             value: 'delete',
+                            child: Text('ลบโหวต'),
                           ),
                         ];
                       },

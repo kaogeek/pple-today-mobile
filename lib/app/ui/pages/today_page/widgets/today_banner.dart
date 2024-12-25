@@ -15,7 +15,7 @@ import '../../../utils/environment.dart';
 class TodayBanner extends StatelessWidget {
   TodayBanner({Key? key}) : super(key: key);
 
-  final _carouselController = CarouselController();
+//   final _carouselController = CarouselController();
   final _current = 0.obs;
 
   @override
@@ -33,7 +33,7 @@ class TodayBanner extends StatelessWidget {
 
           if (controller.contentModel.data!.emergencyEvents!.contents!.isNotEmpty) {
             return CarouselSlider(
-              carouselController: _carouselController,
+            //   carouselController: _carouselController,
               options: CarouselOptions(
                 enableInfiniteScroll: controller.contentModel.data!.emergencyEvents!.contents!.length > 1,
                 onPageChanged: (index, reason) {
@@ -130,7 +130,7 @@ class TodayBanner extends StatelessWidget {
 
           if (controller.contentModel.data!.pageRoundRobin!.contents!.isNotEmpty) {
             return CarouselSlider(
-              carouselController: _carouselController,
+            //   carouselController: _carouselController,
               options: CarouselOptions(
                 enableInfiniteScroll: controller.contentModel.data!.pageRoundRobin!.contents!.length > 1,
                 onPageChanged: (index, reason) {

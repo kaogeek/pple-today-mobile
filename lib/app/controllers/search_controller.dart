@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:platform_device_id/platform_device_id.dart';
+// import 'package:platform_device_id/platform_device_id.dart';
 
 import '../data/models/content_search_model.dart';
 import '../data/models/history_search_model.dart';
@@ -68,11 +68,11 @@ class SearchController extends GetxController {
       String uid = _box.read(StorageKeys.uid) ?? '';
       String token = _box.read(StorageKeys.token) ?? '';
 
-      String? deviceId = await PlatformDeviceId.getDeviceId;
+    //   String? deviceId = await PlatformDeviceId.getDeviceId;
 
       await _service.postHistory(
         uid: uid,
-        deviceId: deviceId!,
+        deviceId: 'deviceId',
         resultType: resultType,
         resultId: resultId,
         keyword: keyword,
@@ -96,11 +96,11 @@ class SearchController extends GetxController {
     String token = _box.read(StorageKeys.token) ?? '';
     String mode = _box.read(StorageKeys.mode) ?? '';
 
-    String? deviceId = await PlatformDeviceId.getDeviceId;
+    // String? deviceId = await PlatformDeviceId.getDeviceId;
 
     String? result = await _service.getHistorySearch(
       uid: uid,
-      deviceId: deviceId!,
+      deviceId: 'deviceId',
       offset: offset,
       limit: limit,
       relation: relation,

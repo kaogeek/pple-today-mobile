@@ -1,6 +1,5 @@
 import 'dart:developer';
 
-import 'package:device_information/device_information.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
@@ -63,7 +62,7 @@ class AccountMergeController extends GetxController {
 
       String tokenFCM = _box.read(StorageKeys.tokenFCM) ?? '';
 
-      String deviceName = await DeviceInformation.deviceName;
+    //   String deviceName = await DeviceInformation.deviceName;
 
       Response response = await _service.checkOTP(
         email: email,
@@ -71,7 +70,7 @@ class AccountMergeController extends GetxController {
         id: id,
         idToken: idToken,
         authToken: authToken,
-        devicename: deviceName,
+        devicename: 'deviceName',
         tokenFCM: tokenFCM,
         tokenSecretTW: tokenSecretTW,
         expires: expires,
@@ -97,12 +96,12 @@ class AccountMergeController extends GetxController {
   }) async {
     String tokenFCM = _box.read(StorageKeys.tokenFCM) ?? '';
 
-    String deviceName = await DeviceInformation.deviceName;
+    // String deviceName = await DeviceInformation.deviceName;
 
     Response response = await _service.loginWithEmail(
       email: email,
       pass: pass,
-      deviceName: deviceName,
+      deviceName: 'deviceName',
       tokenFCM: tokenFCM,
     );
 
@@ -114,10 +113,10 @@ class AccountMergeController extends GetxController {
   Future<void> fetchLoginWithFacebook(String tokenFB) async {
     String tokenFCM = _box.read(StorageKeys.tokenFCM) ?? '';
 
-    String deviceName = await DeviceInformation.deviceName;
+    // String deviceName = await DeviceInformation.deviceName;
 
     Response response = await _service.loginWithFacebook(
-      deviceName: deviceName,
+      deviceName: 'deviceName',
       tokenFCM: tokenFCM,
       tokenFB: tokenFB,
     );
@@ -130,12 +129,12 @@ class AccountMergeController extends GetxController {
   Future<void> fetchLoginWithGoogle({required String tokenGG, required String authTokenGG}) async {
     String tokenFCM = _box.read(StorageKeys.tokenFCM) ?? '';
 
-    String deviceName = await DeviceInformation.deviceName;
+    // String deviceName = await DeviceInformation.deviceName;
 
     Response response = await _service.loginWithGoogle(
       idToken: tokenGG,
       authToken: authTokenGG,
-      deviceName: deviceName,
+      deviceName: 'deviceName',
       tokenFCM: tokenFCM,
     );
 
@@ -154,7 +153,7 @@ class AccountMergeController extends GetxController {
   }) async {
     String tokenFCM = _box.read(StorageKeys.tokenFCM) ?? '';
 
-    String deviceName = await DeviceInformation.deviceName;
+    // String deviceName = await DeviceInformation.deviceName;
 
     Response response = await _service.loginWithApple(
       uid: uid,
@@ -163,7 +162,7 @@ class AccountMergeController extends GetxController {
       authToken: authTokenAP,
       creationTime: creationTime,
       lastSignInTime: lastSignInTime,
-      deviceName: deviceName,
+      deviceName: 'deviceName',
       tokenFCM: tokenFCM,
     );
     await _resultLogin(response, 'AP');

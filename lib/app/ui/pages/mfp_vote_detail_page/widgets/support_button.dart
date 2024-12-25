@@ -58,10 +58,11 @@ class SupportButton extends GetWidget<MfpVoteDetailController> {
                           return;
                         }
 
-                        if (controller.memberType && !(_storage.read(StorageKeys.memberShip) ?? false)) {
-                          await Mfp.memberEngagementDialog();
-                          return;
-                        }
+                        // TODO: memberEngagementDialog
+                        // if (controller.memberType && !(_storage.read(StorageKeys.memberShip) ?? false)) {
+                        //   await Mfp.memberEngagementDialog();
+                        //   return;
+                        // }
 
                         controller.mySupport.value ? await controller.fetchUnSupportVote() : await controller.fetchSupportVote();
                         return;

@@ -12,7 +12,7 @@ import '../../../utils/formatter.dart';
 import 'text_field_forgot_pass.dart';
 
 class FormEmail extends StatelessWidget {
-  FormEmail({Key? key}) : super(key: key);
+  FormEmail({super.key});
 
   final _debouncer = Debouncer(
     delay: const Duration(milliseconds: Duration.millisecondsPerSecond),
@@ -127,6 +127,7 @@ class FormEmail extends StatelessWidget {
                     side: const BorderSide(color: Colors.red),
                   ),
                 ),
+                onPressed: _submitForgotPass,
                 child: const Text(
                   'ถัดไป',
                   style: TextStyle(
@@ -134,7 +135,6 @@ class FormEmail extends StatelessWidget {
                     color: Colors.white,
                   ),
                 ),
-                onPressed: _submitForgotPass,
               ),
             ),
             const AllRightsReserve(),

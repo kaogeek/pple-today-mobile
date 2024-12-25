@@ -4,12 +4,12 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mfp_app/app/data/models/vote_choice_model.dart';
 
 import '../../../component/elevated_button_component.dart';
 import '../../../component/my_dialog.dart';
 import '../../../controllers/mfp_vote_resultes_controller.dart';
 import '../../../controllers/slider_show_image_controller.dart';
+import '../../../data/models/vote_choice_model.dart';
 import '../../../routes/app_routes.dart';
 import '../../layouts/main/widgets/main_layout_view.dart';
 import '../../utils/assets.dart';
@@ -17,7 +17,7 @@ import '../../utils/colors.dart';
 import '../../utils/enum.dart';
 
 class MfpVoteResultesPage extends GetView<MfpVoteResultesController> {
-  MfpVoteResultesPage({Key? key}) : super(key: key);
+  MfpVoteResultesPage({super.key});
 
   @override
   MfpVoteResultesController controller = Get.put(MfpVoteResultesController());
@@ -56,17 +56,17 @@ class MfpVoteResultesPage extends GetView<MfpVoteResultesController> {
           : ListView.builder(
               itemCount: controller.voteChoiceModel.value.data!.voteItem!.length,
               itemBuilder: (context, index) {
-                final _data = controller.voteChoiceModel.value.data!.voteItem![index];
+                final data = controller.voteChoiceModel.value.data!.voteItem![index];
 
                 int random = Random().nextInt(8) + 1;
 
-                return _data.type == VoteChoiceType.text ? _buildVoteAnswer(index, random, _data) : _buildVoteChoice(index, random, _data);
+                return data.type == VoteChoiceType.text ? _buildVoteAnswer(index, random, data) : _buildVoteChoice(index, random, data);
               },
             )),
     );
   }
 
-  Widget _buildVoteChoice(int index, int random, VoteItem _data) {
+  Widget _buildVoteChoice(int index, int random, VoteItem data) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Card(
@@ -81,7 +81,7 @@ class MfpVoteResultesPage extends GetView<MfpVoteResultesController> {
               contentPadding: const EdgeInsets.only(left: 16),
               title: Text(
                 'คำถามที่ ${index + 1}',
-                style: TextStyle(
+                style: const TextStyle(
                   color: Colors.grey,
                   fontSize: 12,
                   fontFamily: Assets.assetsFontsAnakotmaiMedium,
@@ -108,8 +108,8 @@ class MfpVoteResultesPage extends GetView<MfpVoteResultesController> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Text(
-                _data.title ?? '',
-                style: TextStyle(
+                data.title ?? '',
+                style: const TextStyle(
                   fontSize: 16,
                   fontFamily: Assets.assetsFontsAnakotmaiMedium,
                 ),
@@ -119,10 +119,10 @@ class MfpVoteResultesPage extends GetView<MfpVoteResultesController> {
               padding: const EdgeInsets.all(16.0),
               child: GestureDetector(
                 onTap: () {
-                  if ((_data.image ?? '').isNotEmpty) {
+                  if ((data.image ?? '').isNotEmpty) {
                     Get.toNamed(
                       AppRoutes.SLIDER_SHOW_IMAGE,
-                      arguments: SliderShowImageArguments(galleryList: [_data.image]),
+                      arguments: SliderShowImageArguments(galleryList: [data.image]),
                     );
                   }
                 },
@@ -130,7 +130,7 @@ class MfpVoteResultesPage extends GetView<MfpVoteResultesController> {
                   borderRadius: const BorderRadius.all(
                     Radius.circular(16),
                   ),
-                  child: (_data.image ?? '').isEmpty
+                  child: (data.image ?? '').isEmpty
                       ? Image.asset(
                           'assets/images/vote_0$random.jpg',
                           height: 240,
@@ -138,7 +138,7 @@ class MfpVoteResultesPage extends GetView<MfpVoteResultesController> {
                           fit: BoxFit.cover,
                         )
                       : Image.network(
-                          _data.image!,
+                          data.image!,
                           height: 240,
                           width: Get.width,
                           fit: BoxFit.cover,
@@ -164,13 +164,13 @@ class MfpVoteResultesPage extends GetView<MfpVoteResultesController> {
               ),
             ),
             ...List.generate(
-              _data.voteChoice!.length,
+              data.voteChoice!.length,
               (index2) {
-                final _voteChoice = _data.voteChoice![index2];
+                final voteChoice = data.voteChoice![index2];
 
                 int number = index2 % 3 + 1;
 
-                int scoreTotal = _data.voteChoice!.map((e) => e.votedCount ?? 0).reduce((value, element) => value + element);
+                int scoreTotal = data.voteChoice!.map((e) => e.votedCount ?? 0).reduce((value, element) => value + element);
 
                 return GestureDetector(
                   onTap: () {
@@ -185,19 +185,19 @@ class MfpVoteResultesPage extends GetView<MfpVoteResultesController> {
                       ListTile(
                         contentPadding: const EdgeInsets.symmetric(horizontal: 16),
                         title: Text(
-                          _voteChoice.title ?? '',
-                          style: TextStyle(
+                          voteChoice.title ?? '',
+                          style: const TextStyle(
                             fontSize: 16,
                             fontFamily: Assets.assetsFontsAnakotmaiMedium,
                           ),
                         ),
                         trailing: Text(
                           /// format number
-                          _voteChoice.votedCount!.toString().replaceAllMapped(
+                          voteChoice.votedCount!.toString().replaceAllMapped(
                                 RegExp(r'(\d{1,3})(?=(\d{3})+(?!\d))'),
                                 (Match m) => '${m[1]},',
                               ),
-                          style: TextStyle(
+                          style: const TextStyle(
                             fontSize: 16,
                             fontFamily: Assets.assetsFontsAnakotmaiMedium,
                           ),
@@ -209,10 +209,10 @@ class MfpVoteResultesPage extends GetView<MfpVoteResultesController> {
                         padding: EdgeInsets.only(
                           left: 16,
                           right: 16,
-                          bottom: (index2 + 1) == _data.voteChoice!.length ? 16 : 0,
+                          bottom: (index2 + 1) == data.voteChoice!.length ? 16 : 0,
                         ),
                         child: LinearProgressIndicator(
-                          value: scoreTotal == 0 ? 0 : _voteChoice.votedCount! / scoreTotal,
+                          value: scoreTotal == 0 ? 0 : voteChoice.votedCount! / scoreTotal,
                           backgroundColor: Colors.grey[300],
                           valueColor: AlwaysStoppedAnimation<Color>(colors[number - 1]),
                         ),
@@ -228,7 +228,7 @@ class MfpVoteResultesPage extends GetView<MfpVoteResultesController> {
     );
   }
 
-  Widget _buildVoteAnswer(int index, int random, VoteItem _data) {
+  Widget _buildVoteAnswer(int index, int random, VoteItem data) {
     return Padding(
       padding: const EdgeInsets.all(8.0),
       child: Card(
@@ -243,7 +243,7 @@ class MfpVoteResultesPage extends GetView<MfpVoteResultesController> {
               contentPadding: const EdgeInsets.only(left: 16),
               title: Text(
                 'คำถามที่ ${index + 1}',
-                style: TextStyle(
+                style: const TextStyle(
                   color: Colors.grey,
                   fontSize: 12,
                   fontFamily: Assets.assetsFontsAnakotmaiMedium,
@@ -270,8 +270,8 @@ class MfpVoteResultesPage extends GetView<MfpVoteResultesController> {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 16),
               child: Text(
-                _data.title ?? '',
-                style: TextStyle(
+                data.title ?? '',
+                style: const TextStyle(
                   fontSize: 16,
                   fontFamily: Assets.assetsFontsAnakotmaiMedium,
                 ),
@@ -283,14 +283,14 @@ class MfpVoteResultesPage extends GetView<MfpVoteResultesController> {
                 onTap: () {
                   Get.toNamed(
                     AppRoutes.SLIDER_SHOW_IMAGE,
-                    arguments: SliderShowImageArguments(galleryList: [_data.image]),
+                    arguments: SliderShowImageArguments(galleryList: [data.image]),
                   );
                 },
                 child: ClipRRect(
                   borderRadius: const BorderRadius.all(
                     Radius.circular(16),
                   ),
-                  child: (_data.image ?? '').isEmpty
+                  child: (data.image ?? '').isEmpty
                       ? Image.asset(
                           'assets/images/vote_0$random.jpg',
                           height: 240,
@@ -298,7 +298,7 @@ class MfpVoteResultesPage extends GetView<MfpVoteResultesController> {
                           fit: BoxFit.cover,
                         )
                       : Image.network(
-                          _data.image!,
+                          data.image!,
                           height: 240,
                           width: Get.width,
                           fit: BoxFit.cover,
@@ -327,13 +327,13 @@ class MfpVoteResultesPage extends GetView<MfpVoteResultesController> {
               height: 46,
               padding: const EdgeInsets.all(16.0),
               borderColor: kPrimaryColor,
-              labelText: 'ดูคำตอบ (${_data.votedCount ?? 0})',
+              labelText: 'ดูคำตอบ (${data.votedCount ?? 0})',
               style: const TextStyle(
                 fontSize: 14,
                 color: kPrimaryColor,
               ),
               onPressed: () {
-                if ((_data.votedCount ?? 0) == 0) {
+                if ((data.votedCount ?? 0) == 0) {
                   MyDialog.defaultDialog(
                     title: 'ขออภัย',
                     content: 'ยังไม่มีคนตอบคำถามนี้',
@@ -344,9 +344,9 @@ class MfpVoteResultesPage extends GetView<MfpVoteResultesController> {
                 Get.toNamed(
                   AppRoutes.MFP_VOTE_ANSWERING,
                   arguments: {
-                    "VOTE_ID": _data.id,
-                    "VOTE_TITLE": _data.title,
-                    "VOTE_IMAGE": _data.image,
+                    "VOTE_ID": data.id,
+                    "VOTE_TITLE": data.title,
+                    "VOTE_IMAGE": data.image,
                     "NUMBER": random,
                     "SHOW_VOTER_NAME": controller.showVoterName ?? false,
                   },

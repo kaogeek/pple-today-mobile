@@ -4,8 +4,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:mfp_app/app/component/convert_image_component.dart';
 
+import '../component/convert_image_component.dart';
 import '../data/models/base_64_model.dart';
 import '../data/models/create_item_model.dart';
 import '../data/models/file_temp_model.dart' as t;

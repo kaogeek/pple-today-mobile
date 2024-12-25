@@ -11,7 +11,7 @@ import '../../../utils/colors.dart';
 import '../../../utils/enum.dart';
 
 class LoginChoice extends StatelessWidget {
-  LoginChoice({Key? key}) : super(key: key);
+  LoginChoice({super.key});
 
   LoginMainController controller = Get.put(LoginMainController());
 

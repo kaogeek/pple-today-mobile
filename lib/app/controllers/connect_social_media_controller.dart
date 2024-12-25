@@ -54,27 +54,29 @@ class ConnectSocialMediaController extends GetxController {
     final token = (await fetchUpdataMemberShip(membership: true)).data;
 
     if ((token ?? '').isNotEmpty) {
-      final _uri = Uri.https(
-        'auth.moveforwardparty.org',
+      final uri = Uri.https(
+        'auth.peoplesparty.or.th',
         'sso',
         {'client_id': '5', 'process_type': 'binding', 'token': token},
       );
 
-      final _status = await Get.toNamed(
+      debugPrint("_uri.toString() : ${uri.toString()}", wrapWidth: 1024);
+
+      final status = await Get.toNamed(
         AppRoutes.WEB_VIEW_LOGIN_MFP,
         arguments: {
           'TITLE': 'เชื่อมต่อกับ People\'s Party',
-          'URL': _uri.toString(),
+          'URL': uri.toString(),
         },
       );
 
-      debugPrint('_STATUS: $_status');
-      if (_status == null) return;
+      debugPrint('_STATUS: $status');
+      if (status == null) return;
 
-      if (_status != 'ผูกสมาชิกสำเร็จ') {
+      if (status != 'ผูกสมาชิกสำเร็จ') {
         await MyDialog.defaultDialog(
           title: 'ไม่สำเร็จ',
-          content: _status,
+          content: status,
           textConfirm: 'ปิด',
           onConfirm: () {
             Get.back();
@@ -96,8 +98,55 @@ class ConnectSocialMediaController extends GetxController {
         },
       );
     }
-
     return;
+  }
+
+  Future<void> fetchBindingAct() async {
+    final queryParameters = await fetchGetMD5HashKey();
+
+    if (queryParameters.isEmpty) return;
+
+    final uri = Uri.https(
+      'act.pplethai.org',
+      '/today',
+      queryParameters,
+    );
+
+    final status = await Get.toNamed(
+      AppRoutes.WEB_VIEW_LOGIN_MFP,
+      arguments: {
+        'TITLE': 'เชื่อมต่อกับ Act MFP',
+        'URL': uri.toString(),
+      },
+    );
+
+    debugPrint("_status : $status", wrapWidth: 1024);
+
+    if (status == null) return;
+
+    if (status == 'ผูกสมาชิกสำเร็จ') {
+      ProfileController profileController = Get.find();
+      await profileController.fetchProfileUser();
+
+      await MyDialog.defaultDialog(
+        title: 'สำเร็จ',
+        content: 'คุณได้ทำการผูกสมาชิกสำเร็จแล้ว',
+        textConfirm: 'เสร็จสิ้น',
+        onConfirm: () {
+          Get.back();
+        },
+      );
+    } else {
+      await MyDialog.defaultDialog(
+        title: 'ไม่สำเร็จ',
+        content: status,
+        textConfirm: 'ปิด',
+        onConfirm: () {
+          Get.back();
+        },
+      );
+      return;
+    }
   }
 
   Future<BaseModel> fetchUpdataMemberShip({required bool membership}) async {
@@ -129,9 +178,9 @@ class ConnectSocialMediaController extends GetxController {
   }
 
   Future<Map<String, dynamic>> fetchGetMD5HashKey() async {
-    final _uid = _box.read(StorageKeys.uid) ?? '';
+    final uid = _box.read(StorageKeys.uid) ?? '';
 
-    Response response = await _service.md5HashKey(uid: _uid);
+    Response response = await _service.md5HashKey(uid: uid);
 
     if (response.hasError) {
       await MyDialog.defaultDialog(
@@ -145,13 +194,13 @@ class ConnectSocialMediaController extends GetxController {
       return {};
     }
 
-    final _md5Key = response.body['Digest'] ?? '';
+    final md5Key = response.body['Digest'] ?? '';
 
-    final _queryParameters = {
-      'today_uid': _uid,
-      'token': _md5Key,
+    final queryParameters = {
+      'today_uid': uid,
+      'token': md5Key,
     };
 
-    return _queryParameters;
+    return queryParameters;
   }
 }

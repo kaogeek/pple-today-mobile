@@ -16,7 +16,7 @@ import '../../../utils/enum.dart';
 import '../../../utils/storage_keys.dart';
 
 class PostDetailCommentView extends StatelessWidget {
-  PostDetailCommentView({Key? key}) : super(key: key);
+  PostDetailCommentView({super.key});
 
   PostDetailController controller = Get.put(PostDetailController());
   TodayController todayController = Get.put(TodayController());
@@ -37,7 +37,7 @@ class PostDetailCommentView extends StatelessWidget {
               padding: EdgeInsets.zero,
               itemCount: controller.commentListModel.data!.length,
               itemBuilder: (BuildContext context, int index) {
-                final _data = controller.commentListModel.data![index];
+                final data = controller.commentListModel.data![index];
 
                 return Column(
                   mainAxisSize: MainAxisSize.min,
@@ -49,7 +49,7 @@ class PostDetailCommentView extends StatelessWidget {
                         children: [
                           Padding(
                             padding: const EdgeInsets.symmetric(vertical: 2, horizontal: 10),
-                            child: (_data.user?.imageUrl ?? '').isEmpty
+                            child: (data.user?.imageUrl ?? '').isEmpty
                                 ? CircleAvatar(
                                     backgroundColor: Colors.transparent,
                                     backgroundImage: AssetImage(
@@ -58,7 +58,7 @@ class PostDetailCommentView extends StatelessWidget {
                                   )
                                 : CircleAvatar(
                                     backgroundColor: Colors.transparent,
-                                    backgroundImage: NetworkImage(_data.user!.imageUrl!),
+                                    backgroundImage: NetworkImage(data.user!.imageUrl!),
                                   ),
                           ),
                           Column(
@@ -82,7 +82,7 @@ class PostDetailCommentView extends StatelessWidget {
                                         Padding(
                                           padding: const EdgeInsets.only(left: 4, top: 4),
                                           child: Text(
-                                            _data.user?.displayName ?? '',
+                                            data.user?.displayName ?? '',
                                             maxLines: 1,
                                             style: TextStyle(
                                               fontSize: 12,
@@ -95,7 +95,7 @@ class PostDetailCommentView extends StatelessWidget {
                                         Padding(
                                           padding: const EdgeInsets.only(left: 4, bottom: 4),
                                           child: ReadMoreText(
-                                            _data.comment ?? '',
+                                            data.comment ?? '',
                                             trimMode: TrimMode.line,
                                             style: TextStyle(
                                               fontSize: 14,
@@ -120,16 +120,16 @@ class PostDetailCommentView extends StatelessWidget {
                                       child: GestureDetector(
                                         onTap: () => onTapLike(index),
                                         child: Text(
-                                          '${_data.likeCount ?? 0} ถูกใจ',
+                                          '${data.likeCount ?? 0} ถูกใจ',
                                           style: TextStyle(
                                             fontSize: 12,
                                             fontWeight: FontWeight.bold,
-                                            color: _data.isLike ?? false ? kPrimaryColor : primaryBlue,
+                                            color: data.isLike ?? false ? kPrimaryColor : primaryBlue,
                                           ),
                                         ),
                                       ),
                                     ),
-                                    (_data.user?.id ?? '') != _uid
+                                    (data.user?.id ?? '') != _uid
                                         ? const SizedBox()
                                         : Padding(
                                             padding: const EdgeInsets.only(right: 16),
@@ -145,7 +145,7 @@ class PostDetailCommentView extends StatelessWidget {
                                               ),
                                             ),
                                           ),
-                                    (_data.user?.id ?? '') != _uid
+                                    (data.user?.id ?? '') != _uid
                                         ? const SizedBox()
                                         : Padding(
                                             padding: const EdgeInsets.only(right: 16),
@@ -161,10 +161,89 @@ class PostDetailCommentView extends StatelessWidget {
                                               ),
                                             ),
                                           ),
+                                    (data.user?.id ?? '') == _uid
+                                        ? const SizedBox()
+                                        : Padding(
+                                            padding: const EdgeInsets.only(right: 16),
+                                            child: GestureDetector(
+                                              onTap: () async {
+                                                await showModalBottomSheet(
+                                                  context: context,
+                                                  builder: (context) {
+                                                    return SafeArea(
+                                                      child: SingleChildScrollView(
+                                                        child: Obx(() => controller.isLoadingReport.isTrue
+                                                            ? const Center(
+                                                                child: Padding(
+                                                                  padding: EdgeInsets.only(top: 16),
+                                                                  child: CircularProgressIndicator(color: kPrimaryColor),
+                                                                ),
+                                                              )
+                                                            : Column(
+                                                                mainAxisSize: MainAxisSize.min,
+                                                                children: [
+                                                                  SizedBox(height: 16),
+                                                                  ListTile(
+                                                                    onTap: () async {
+                                                                      controller.isLoadingReport.value = true;
+                                                                      await 2.seconds.delay();
+                                                                      controller.isLoadingReport.value = false;
+                                                                      //   await controller.fetchReportComment(
+                                                                      //     postId: controller.postId,
+                                                                      //     commentId: data.id!,
+                                                                      //     reportType: ReportType.inappropriate,
+                                                                      //   );
+                                                                      Get.back();
+                                                                    },
+                                                                    title: const Text('รายงานเนื้อหาไม่เหมาะสม'),
+                                                                  ),
+                                                                  ListTile(
+                                                                    onTap: () async {
+                                                                      controller.isLoadingReport.value = true;
+                                                                      await 2.seconds.delay();
+                                                                      controller.isLoadingReport.value = false;
+                                                                      //   await controller.fetchReportComment(
+                                                                      //     postId: controller.postId,
+                                                                      //     commentId: data.id!,
+                                                                      //     reportType: ReportType.violence,
+                                                                      //   );
+                                                                      Get.back();
+                                                                    },
+                                                                    title: const Text('รายงานความรุนแรง'),
+                                                                  ),
+                                                                  ListTile(
+                                                                    onTap: () async {
+                                                                      controller.isLoadingReport.value = true;
+                                                                      await 2.seconds.delay();
+                                                                      controller.isLoadingReport.value = false;
+                                                                      //   await controller.fetchReportComment(
+                                                                      //     postId: controller.postId,
+                                                                      //     commentId: data.id!,
+                                                                      //     reportType: ReportType.spam,
+                                                                      //   );
+                                                                      Get.back();
+                                                                    },
+                                                                    title: const Text('รายงานสแปม'),
+                                                                  ),
+                                                                ],
+                                                              )),
+                                                      ),
+                                                    );
+                                                  },
+                                                );
+                                              },
+                                              child: Text(
+                                                'รายงาน',
+                                                style: TextStyle(
+                                                  fontSize: 12,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: data.isLike ?? false ? kPrimaryColor : primaryBlue,
+                                                ),
+                                              ),
+                                            ),
+                                          ),
                                     Text(
-                                      _data.createdDate == null
-                                          ? ''
-                                          : ConvertTimeComponenet.convertToAgo(_data.createdDate!),
+                                      data.createdDate == null ? '' : ConvertTimeComponenet.convertToAgo(data.createdDate!),
                                       maxLines: 1,
                                       overflow: TextOverflow.ellipsis,
                                       style: TextStyle(
@@ -181,8 +260,7 @@ class PostDetailCommentView extends StatelessWidget {
                         ],
                       ),
                     ),
-                    ((controller.storyModel.data!.first.commentCount ?? 0) > 5) &&
-                            (index == controller.commentListModel.data!.length - 1)
+                    ((controller.storyModel.data!.first.commentCount ?? 0) > 5) && (index == controller.commentListModel.data!.length - 1)
                         ? controller.isNotComment
                             ? const SafeArea(child: SizedBox())
                             : controller.isLoadMore
@@ -247,7 +325,7 @@ class PostDetailCommentView extends StatelessWidget {
   }
 
   Future<void> onTapDeleteComment(int index) async {
-    final _data = controller.commentListModel.data![index];
+    final data = controller.commentListModel.data![index];
 
     await Get.defaultDialog(
       title: 'ลบความคิดเห็น',
@@ -263,7 +341,7 @@ class PostDetailCommentView extends StatelessWidget {
       cancelTextColor: kPrimaryColor,
       buttonColor: Colors.white,
       onConfirm: () async {
-        controller.commentListModel.data!.removeWhere((element) => element.id == _data.id);
+        controller.commentListModel.data!.removeWhere((element) => element.id == data.id);
         controller.storyModel.data!.first.commentCount = controller.storyModel.data!.first.commentCount! - 1;
         controller.update();
 
@@ -287,7 +365,7 @@ class PostDetailCommentView extends StatelessWidget {
 
         await controller.fetchDeleteComment(
           postId: controller.postId,
-          commentId: _data.id!,
+          commentId: data.id!,
         );
 
         todayController.fetchStory(controller.postId);
@@ -299,12 +377,12 @@ class PostDetailCommentView extends StatelessWidget {
   }
 
   void onTapEdit(int index) {
-    final _data = controller.commentListModel.data![index];
+    final data = controller.commentListModel.data![index];
 
     controller.isEdit = true;
-    controller.commentId = _data.id!;
+    controller.commentId = data.id!;
     controller.commentTextController.clear();
-    controller.commentTextController.text = _data.comment!;
+    controller.commentTextController.text = data.comment!;
     controller.focusNode.requestFocus();
     controller.update();
   }

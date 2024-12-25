@@ -15,7 +15,7 @@ import 'widgets/logout_button.dart';
 import 'widgets/my_page_profile_user.dart';
 
 class ProfilePage extends GetView<ProfileController> {
-  ProfilePage({Key? key}) : super(key: key);
+  ProfilePage({super.key});
 
   @override
   ProfileController controller = Get.put(ProfileController());
@@ -76,7 +76,11 @@ class ProfilePage extends GetView<ProfileController> {
                             color: Colors.grey,
                           ),
                           onTap: () {
-                            Get.toNamed(AppRoutes.SETTING);
+                            // Get.toNamed(AppRoutes.SETTING);
+                            Get.toNamed(
+                              AppRoutes.PRIVACY_POLICY,
+                              arguments: {'HIDE_BUTTON': true},
+                            );
                           },
                         ),
                         // const DividerComponent(),

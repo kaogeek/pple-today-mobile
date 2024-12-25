@@ -7,10 +7,7 @@ import '../../layouts/main/widgets/main_layout_view.dart';
 import '../../utils/colors.dart';
 
 class WebviewPage extends GetView<WebviewController> {
-  WebviewPage({Key? key}) : super(key: key);
-
-  @override
-  WebviewController controller = Get.put(WebviewController());
+  const WebviewPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -28,35 +25,40 @@ class WebviewPage extends GetView<WebviewController> {
           ),
         ),
       ),
-      body: GetBuilder<WebviewController>(
-        init: WebviewController(),
-        initState: (_) {},
-        builder: (_) {
-          return Stack(
-            children: [
-              WebView(
-                initialUrl: controller.url,
-                javascriptMode: JavascriptMode.unrestricted,
-                onPageFinished: (finish) {
-                  controller.isLoading = false;
-                  controller.update();
-                },
-                onProgress: (progress) {
-                  controller.isProgress = progress / 100;
-                  controller.update();
-                },
-              ),
-              if (controller.isLoading)
-                LinearProgressIndicator(
-                  backgroundColor: Colors.transparent,
-                  valueColor: const AlwaysStoppedAnimation<Color>(
-                    kPrimaryColor,
-                  ),
-                  value: controller.isProgress,
+      body: Stack(
+        children: [
+          WebViewWidget(
+            controller: WebViewController()
+              ..setJavaScriptMode(JavaScriptMode.unrestricted)
+              ..setNavigationDelegate(
+                NavigationDelegate(
+                  onProgress: (int progress) {
+                    controller.isProgress.value = progress / 100;
+                  },
+                  onPageStarted: (String url) {
+                    controller.isLoading.value = true;
+                  },
+                  onPageFinished: (String url) {
+                    controller.isLoading.value = false;
+                  },
+                  onHttpError: (HttpResponseError error) {
+                    debugPrint("HttpResponseError : $error", wrapWidth: 1024);
+                  },
+                  onWebResourceError: (WebResourceError error) {
+                    debugPrint("WebResourceError : $error", wrapWidth: 1024);
+                  },
                 ),
-            ],
-          );
-        },
+              )
+              ..loadRequest(Uri.parse(controller.url)),
+          ),
+          Obx(() => controller.isLoading.value
+              ? LinearProgressIndicator(
+                  backgroundColor: Colors.transparent,
+                  valueColor: const AlwaysStoppedAnimation<Color>(kPrimaryColor),
+                  value: controller.isProgress.value,
+                )
+              : SizedBox.shrink()),
+        ],
       ),
     );
   }

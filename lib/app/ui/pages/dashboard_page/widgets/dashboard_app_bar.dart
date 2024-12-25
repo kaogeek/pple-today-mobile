@@ -15,7 +15,7 @@ import '../../../utils/colors.dart';
 import '../../../utils/storage_keys.dart';
 
 class DashboardAppBar extends StatelessWidget {
-  DashboardAppBar({Key? key}) : super(key: key);
+  DashboardAppBar({super.key});
 
   final _token = GetStorage().read(StorageKeys.token) ?? '';
 
@@ -62,7 +62,7 @@ class DashboardAppBar extends StatelessWidget {
                 IconButton(
                   iconSize: 27,
                   splashRadius: 1,
-                  icon: const Icon(
+                  icon: Icon(
                     MdiIcons.bellOutline,
                     color: primaryBlue,
                   ),

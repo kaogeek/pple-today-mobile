@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mfp_app/app/ui/utils/assets.dart';
 
 import '../../../../controllers/dashboard_controller.dart';
+import '../../../utils/assets.dart';
 import '../../../utils/colors.dart';
 
 class DashboardBottomNavigationBar extends StatelessWidget {
   final List children;
 
   const DashboardBottomNavigationBar({
-    Key? key,
+    super.key,
     required this.children,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -24,7 +24,7 @@ class DashboardBottomNavigationBar extends StatelessWidget {
         return TabBar(
           labelColor: kPrimaryColor,
           unselectedLabelColor: Colors.grey,
-          labelStyle: TextStyle(
+          labelStyle: const TextStyle(
             fontWeight: FontWeight.w600,
             fontSize: 11,
             fontFamily: Assets.assetsFontsAnakotmaiLight,

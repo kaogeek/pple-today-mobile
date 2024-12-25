@@ -16,14 +16,13 @@ class WebviewEmergencyController extends GetxController {
   String? iconImage = Get.arguments['ICON_IMAGE'];
   String title = Get.arguments['TITLE'] ?? '';
 
+  RxDouble isProgress = 0.0.obs;
+  RxBool isLoading = true.obs;
+
   @override
   void onInit() {
     super.onInit();
     log('URL: $url');
     debugPrint('TITLE: $title');
   }
-
-  double isProgress = 0.0;
-
-  bool isLoading = true;
 }

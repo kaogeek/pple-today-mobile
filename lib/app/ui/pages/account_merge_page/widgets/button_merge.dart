@@ -2,14 +2,14 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mfp_app/app/routes/app_routes.dart';
 
 import '../../../../component/snack_bar_component.dart';
 import '../../../../controllers/account_merge_controller.dart';
+import '../../../../routes/app_routes.dart';
 import '../../../utils/colors.dart';
 
 class ButtonMerge extends StatelessWidget {
-  ButtonMerge({Key? key}) : super(key: key);
+  ButtonMerge({super.key});
 
   AccountMergeController controller = Get.put(AccountMergeController());
 
@@ -23,8 +23,8 @@ class ButtonMerge extends StatelessWidget {
         child: ElevatedButton(
           onPressed: onMerge,
           style: ButtonStyle(
-            backgroundColor: MaterialStateProperty.all<Color>(kPrimaryColor),
-            shape: MaterialStateProperty.all<RoundedRectangleBorder>(
+            backgroundColor: WidgetStateProperty.all<Color>(kPrimaryColor),
+            shape: WidgetStateProperty.all<RoundedRectangleBorder>(
               RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(50),
               ),

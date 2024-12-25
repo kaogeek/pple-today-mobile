@@ -15,7 +15,7 @@ import '../../utils/storage_keys.dart';
 import '../dashboard_page/widgets/dashboard_app_bar.dart';
 
 class MenuPage extends GetView<menu.MenuController> {
-  MenuPage({Key? key}) : super(key: key);
+  MenuPage({super.key});
 
   DashboardController dashboardController = Get.put(DashboardController());
 
@@ -134,7 +134,7 @@ class MenuPage extends GetView<menu.MenuController> {
                       initState: (_) {},
                       builder: (_) {
                         return Text(
-                          'v.${controller.appVersion}' + (kDebugMode ? '\t(+${controller.appBuild})' : ''),
+                          'v.${controller.appVersion}${kDebugMode ? '\t(+${controller.appBuild})' : ''}',
                           style: const TextStyle(
                             color: Colors.grey,
                             fontSize: 12,
@@ -269,7 +269,7 @@ class MenuPage extends GetView<menu.MenuController> {
     switch (id) {
       case "contact":
         MyDialog.twoTone(
-          title: 'สำนักงานใหญ่\nเลขที่ 167 อาคารอนาคตใหม่ ชั้น 6\nรามคำแหง 42 แขวงหัวหมาก เขตบางกะปิ\nกรุงเทพมหานคร 10240\n',
+          title: 'สำนักงานใหญ่\nเลขที่ 167 อาคารอนาคตใหม่ ชั้น 4\nรามคำแหง 42 แขวงหัวหมาก เขตบางกะปิ\nกรุงเทพมหานคร 10240\n',
           subTitle:
               'ติดต่อเรา\n☎️ 02-821-5874 (จันทร์-ศุกร์ 10:00-18:00 น.)\n📧 office@peoplespartythailand.org\nPeoplesPartyThailand\n@PPLEThailand\nพรรคประชาชน - People\'s Party',
         );

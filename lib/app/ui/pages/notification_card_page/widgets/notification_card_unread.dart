@@ -4,6 +4,7 @@ import 'package:get/get.dart';
 import '../../../../component/convert_time_componenet.dart';
 import '../../../../component/refresh_load_more_list_view.dart';
 import '../../../../controllers/notification_card_controller.dart';
+import '../../../../controllers/user_engagement_controller.dart';
 import '../../../../routes/app_routes.dart';
 import '../../../utils/colors.dart';
 
@@ -52,8 +53,7 @@ class NotifacationCardUnread extends StatelessWidget {
               child: ListTile(
                 leading: CircleAvatar(
                   backgroundColor: Colors.grey.shade300,
-                  backgroundImage:
-                      (_data.sender?.imageUrl ?? '').isEmpty ? null : NetworkImage(_data.sender!.imageUrl!),
+                  backgroundImage: (_data.sender?.imageUrl ?? '').isEmpty ? null : NetworkImage(_data.sender!.imageUrl!),
                   child: (_data.sender?.imageUrl ?? '').isNotEmpty
                       ? null
                       : Text(
@@ -94,17 +94,44 @@ class NotifacationCardUnread extends StatelessWidget {
                   controller.notificationUnReadModel.data![index].notification!.isRead = true;
                   controller.update();
 
-                  bool isPost = controller.listType.contains(_data.notification!.type);
+                  String type = _data.notification?.type ?? "";
+                  String postId = _data.notification!.link!.split('/').last;
 
+                  controller.fetchReadNotification(_data.notification!.id!);
+
+                  bool isPost = controller.listType.contains(type);
                   if (isPost && _data.notification!.toUserType!.toUpperCase() == 'USER') {
-                    String postId = _data.notification!.link!.split('/').last;
                     Get.toNamed(
                       AppRoutes.POST_DETAIL,
                       arguments: {'POST_ID': postId},
                     );
+                  } else if (type == 'VOTE_EVENT_NOTI') {
+                    String votingId = _data.notification?.link?.split('/').last ?? '';
+                    Get.toNamed(
+                      AppRoutes.MFP_VOTE_DASHBOARD,
+                      arguments: {'VOTE_ID': votingId},
+                    );
+                    await Get.put(UserEngagementController()).fetchIsReadVoteEvent(
+                      postId: [],
+                      votingId: [votingId],
+                    );
+                  } else if (type == 'PPLE_NEWS') {
+                    Get.toNamed(
+                      AppRoutes.POST_DETAIL,
+                      arguments: {'POST_ID': postId},
+                    );
+                    await Get.put(UserEngagementController()).fetchIsReadVoteNews(
+                      postId: [postId],
+                    );
+                  } else if (type == 'LINE_NOTI') {
+                    Get.toNamed(
+                      AppRoutes.POST_DETAIL,
+                      arguments: {'POST_ID': postId},
+                    );
+                    await Get.put(UserEngagementController()).fetchIsReadLineNoti(
+                      postId: [postId],
+                    );
                   }
-
-                  await controller.fetchReadNotification(_data.notification!.id!);
                 },
               ),
             );

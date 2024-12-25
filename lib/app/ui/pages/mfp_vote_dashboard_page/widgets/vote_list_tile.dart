@@ -21,12 +21,12 @@ class VoteListTile extends StatelessWidget {
   final bool? isResults;
 
   VoteListTile({
-    Key? key,
+    super.key,
     required this.topic,
     required this.tabName,
     required this.data,
     this.isResults = false,
-  }) : super(key: key);
+  });
 
   MfpVoteDashboardController controller = Get.put(MfpVoteDashboardController());
 
@@ -122,6 +122,7 @@ class VoteListTile extends StatelessWidget {
                                       );
                               },
                               child: Card(
+                                color: Colors.white,
                                 shape: RoundedRectangleBorder(
                                   borderRadius: BorderRadius.circular(10),
                                 ),
@@ -305,15 +306,15 @@ class VoteListTile extends StatelessWidget {
                                                             //   value: 'edit',
                                                             // ),
                                                             const PopupMenuItem(
-                                                              child: Text('ลบโหวต'),
                                                               value: 'delete',
+                                                              child: Text('ลบโหวต'),
                                                             ),
                                                           ],
-                                                          onSelected: (_value) async {
+                                                          onSelected: (selected) async {
                                                             // TODO: แก้ไข
-                                                            print('value: $_value');
+                                                            print('value: $selected');
 
-                                                            switch (_value) {
+                                                            switch (selected) {
                                                               case 'edit':
                                                                 dynamic result = await Get.toNamed(
                                                                   AppRoutes.MFP_VOTE_EDIT_VIEW,

@@ -2,17 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 
-
 class AnimatedSplash extends StatefulWidget {
   AnimatedSplash({
-    Key? key,
+    super.key,
     this.backgroundColor,
     required this.logoPath,
     required this.subtitle,
     required this.home,
     this.onInit,
     this.duration = 2000,
-  }) : super(key: key) {
+  }) {
     assert(logoPath != null);
     assert(logoPath != '');
     assert(subtitle != null);
@@ -80,7 +79,8 @@ class _AnimatedSplashState extends State<AnimatedSplash> with SingleTickerProvid
     }
 
     duration.milliseconds.delay(() {
-      Get.offAndToNamed(widget.home);
+      //   Get.offAndToNamed(widget.home);
+      Get.toNamed(widget.home);
     });
     return;
   }

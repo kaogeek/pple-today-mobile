@@ -16,13 +16,13 @@ import 'widgets/post_detail_app_bat.dart';
 import 'widgets/post_detail_body.dart';
 
 class PostDetailPage extends GetView<PostDetailController> {
-  PostDetailPage({Key? key}) : super(key: key);
+  PostDetailPage({super.key});
 
   TodayController todayController = Get.put(TodayController());
 
   @override
   Widget build(BuildContext context) {
-    final _isToken = (GetStorage().read(StorageKeys.token) ?? '').isNotEmpty;
+    final isToken = (GetStorage().read(StorageKeys.token) ?? '').isNotEmpty;
 
     return MainLayoutView(
       body: GetBuilder<PostDetailController>(
@@ -37,7 +37,7 @@ class PostDetailPage extends GetView<PostDetailController> {
                   top: false,
                   left: false,
                   right: false,
-                  bottom: _isToken,
+                  bottom: isToken,
                   child: Stack(
                     alignment: AlignmentDirectional.bottomEnd,
                     children: [
@@ -48,7 +48,7 @@ class PostDetailPage extends GetView<PostDetailController> {
                           PostDetailBody(),
                         ],
                       ),
-                      if (_isToken)
+                      if (isToken)
                         Column(
                           mainAxisSize: MainAxisSize.min,
                           children: [
@@ -116,16 +116,16 @@ class PostDetailPage extends GetView<PostDetailController> {
   }
 
   Future<void> _onSendComment() async {
-    String _comment = controller.commentTextController.text;
+    String comment = controller.commentTextController.text;
 
-    if (_comment.isEmpty) return;
+    if (comment.isEmpty) return;
 
     FocusManager.instance.primaryFocus?.unfocus();
 
     if (controller.isEdit) {
       controller.commentListModel.data!.forEach((element) {
         if (element.id == controller.commentId) {
-          element.comment = _comment;
+          element.comment = comment;
           controller.update();
         }
       });
@@ -138,7 +138,7 @@ class PostDetailPage extends GetView<PostDetailController> {
       await controller.fetchIsEditComment(
         postId: controller.postId,
         commentId: controller.commentId,
-        commentText: _comment,
+        commentText: comment,
       );
       todayController.fetchStory(controller.postId);
       todayController.fetchPostStory();
@@ -149,7 +149,7 @@ class PostDetailPage extends GetView<PostDetailController> {
 
       controller.fetchSendComment(
         postId: controller.postId,
-        comment: _comment,
+        comment: comment,
       );
     }
 

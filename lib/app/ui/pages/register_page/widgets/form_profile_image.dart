@@ -44,7 +44,7 @@ class FormProfileImage extends StatelessWidget {
                       radius: 108,
                       backgroundImage: FileImage(controller.profileImage),
                     )
-                  : CircleAvatar(
+                  : const CircleAvatar(
                       radius: 108,
                       backgroundImage: AssetImage(Assets.assetsImagesPlaceholderPNG),
                     ),
@@ -83,11 +83,11 @@ class FormProfileImage extends StatelessWidget {
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
           padding: const EdgeInsets.only(top: 15, bottom: 15),
+          backgroundColor: kPrimaryColor,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(30),
             side: const BorderSide(color: Colors.red),
           ),
-          primary: kPrimaryColor,
         ),
         onPressed: onPressed,
         child: Text(

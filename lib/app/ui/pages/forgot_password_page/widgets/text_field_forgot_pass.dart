@@ -15,7 +15,7 @@ class TextFieldForgotPass extends StatelessWidget {
   final bool obscureText;
 
   const TextFieldForgotPass({
-    Key? key,
+    super.key,
     required this.controller,
     this.inputFormatters,
     required this.hintText,
@@ -24,7 +24,7 @@ class TextFieldForgotPass extends StatelessWidget {
     this.suffixIcon,
     this.readOnly = false,
     this.obscureText = false,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

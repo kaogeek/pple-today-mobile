@@ -18,7 +18,7 @@ class AnalyticsService {
         analytics: _service._analytics,
       );
 
-  Future logEvent({required String name, Map<String, dynamic>? parameters}) async {
+  Future logEvent({required String name, Map<String, Object>? parameters}) async {
     // debugPrint('-- AnalyticsService.logEvent: $name');
 
     await _analytics.logEvent(name: name, parameters: parameters);

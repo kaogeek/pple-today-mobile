@@ -43,11 +43,11 @@ class BottomNaviTOS extends StatelessWidget {
                 child: ElevatedButton(
                   style: ElevatedButton.styleFrom(
                     padding: const EdgeInsets.symmetric(vertical: 8),
+                    backgroundColor: kPrimaryColor,
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(30),
                       side: controller.accept ? const BorderSide(color: kPrimaryColor) : BorderSide.none,
                     ),
-                    primary: kPrimaryColor,
                   ),
                   child: const Text(
                     'Accept',

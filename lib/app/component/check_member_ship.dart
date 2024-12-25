@@ -14,10 +14,11 @@ class CheckMemberShip {
         return false;
       }
 
-      if (!memberShip) {
-        Mfp.memberEngagementDialog();
-        return false;
-      }
+      // TODO: memberShip
+      //   if (!memberShip) {
+      //     Mfp.memberEngagementDialog();
+      //     return false;
+      //   }
     }
 
     return true;

@@ -17,7 +17,7 @@ import 'widgets/view_vote_support.dart';
 import 'widgets/view_vote_open.dart';
 
 class MfpVoteDashboardPage extends GetView<MfpVoteDashboardController> {
-  MfpVoteDashboardPage({Key? key}) : super(key: key);
+  MfpVoteDashboardPage({super.key});
 
   @override
   MfpVoteDashboardController controller = Get.put(MfpVoteDashboardController());
@@ -26,10 +26,10 @@ class MfpVoteDashboardPage extends GetView<MfpVoteDashboardController> {
 
   @override
   Widget build(BuildContext context) {
-    final _token = _storage.read(StorageKeys.token) ?? '';
+    final token = _storage.read(StorageKeys.token) ?? '';
 
     return DefaultTabController(
-      length: _token.isNotEmpty ? 5 : 4,
+      length: token.isNotEmpty ? 5 : 4,
       child: MainLayoutView(
         appBar: AppBar(
           leading: BackButton(
@@ -67,9 +67,10 @@ class MfpVoteDashboardPage extends GetView<MfpVoteDashboardController> {
               ),
           ],
           bottom: TabBar(
-            isScrollable: _token.isNotEmpty ? true : false,
+            isScrollable: token.isNotEmpty ? true : false,
             padding: const EdgeInsets.symmetric(horizontal: 16),
             indicatorPadding: const EdgeInsets.only(top: 8, bottom: 12),
+            indicatorSize: TabBarIndicatorSize.tab,
             indicator: BoxDecoration(
               borderRadius: BorderRadius.circular(50),
               color: kPrimaryMFPColor,
@@ -86,7 +87,7 @@ class MfpVoteDashboardPage extends GetView<MfpVoteDashboardController> {
             ),
             tabs: [
               const Tab(text: 'ทั้งหมด'),
-              if (_token.isNotEmpty) const Tab(text: 'ที่ฉันมีส่วนร่วม'),
+              if (token.isNotEmpty) const Tab(text: 'ที่ฉันมีส่วนร่วม'),
               const Tab(text: 'เปิดโหวต'),
               const Tab(text: 'ล่ารายชื่อ'),
               const Tab(text: 'ดูผลโหวต'),
@@ -97,7 +98,7 @@ class MfpVoteDashboardPage extends GetView<MfpVoteDashboardController> {
           physics: const NeverScrollableScrollPhysics(),
           children: [
             ViewVoteAll(),
-            if (_token.isNotEmpty) ViewVoteMyCreate(),
+            if (token.isNotEmpty) ViewVoteMyCreate(),
             ViewVoteOpen(),
             ViewVoteSupport(),
             ViewVoteResults(),

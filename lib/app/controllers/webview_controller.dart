@@ -12,9 +12,8 @@ class WebviewController extends GetxController {
       (GetStorage().read(StorageKeys.mode) != null ? '&mode=${GetStorage().read(StorageKeys.mode)}' : '');
   String title = Get.arguments['TITLE'];
 
-  double isProgress = 0.0;
-
-  bool isLoading = true;
+  RxDouble isProgress = 0.0.obs;
+  RxBool isLoading = true.obs;
 
   @override
   void onInit() {

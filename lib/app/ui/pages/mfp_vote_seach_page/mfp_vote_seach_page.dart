@@ -91,6 +91,7 @@ class MfpVoteSeachPage extends GetView<MfpVoteSeachController> {
           bottom: TabBar(
             padding: const EdgeInsets.symmetric(horizontal: 16),
             indicatorPadding: const EdgeInsets.only(top: 8, bottom: 12),
+            indicatorSize: TabBarIndicatorSize.tab,
             indicator: BoxDecoration(
               borderRadius: BorderRadius.circular(50),
               color: kPrimaryMFPColor,

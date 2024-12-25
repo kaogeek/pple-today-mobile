@@ -6,19 +6,19 @@ class Assets {
 
   /// Assets for assetsFontsAnakotmaiBold
   /// assets/fonts/Anakotmai-Bold.ttf
-  static const String assetsFontsAnakotmaiBold = "assets/fonts/Anakotmai-Bold.ttf";
+  static const String assetsFontsAnakotmaiBold = "Anakotmai-Bold";
 
   /// Assets for assetsFontsAnakotmaiLight
   /// assets/fonts/Anakotmai-Light.ttf
-  static const String assetsFontsAnakotmaiLight = "assets/fonts/Anakotmai-Light.ttf";
+  static const String assetsFontsAnakotmaiLight = "Anakotmai-Light";
 
   /// Assets for assetsFontsAnakotmaiMedium
   /// assets/fonts/Anakotmai-Medium.ttf
-  static const String assetsFontsAnakotmaiMedium = "assets/fonts/Anakotmai-Medium.ttf";
+  static const String assetsFontsAnakotmaiMedium = "Anakotmai-Medium";
 
   /// Assets for assetsFontsSarabunLight
   /// assets/fonts/Sarabun-Light.ttf
-  static const String assetsFontsSarabunLight = "assets/fonts/Sarabun-Light.ttf";
+  static const String assetsFontsSarabunLight = "Sarabun-Light";
 
   /// Assets for assetsIconPplLogo
   /// assets/icon/ppl-logo.png

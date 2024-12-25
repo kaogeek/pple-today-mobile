@@ -18,18 +18,19 @@ class MenuController extends GetxController {
   VerifyMenuItemModel get verifyMenu => _verifyMenu.value;
   set verifyMenu(VerifyMenuItemModel value) => _verifyMenu.value = value;
 
+// TODO: menuItem
   dynamic menuItem = [
     {
       "id": "personnel",
       "title": "บุคลากร",
       "imagePath": Assets.assetsImagesGroup12031,
-      "url": "https://www.peoplespartythailand.org/person/parliament/",
+      "url": "https://peoplesparty.or.th/person/parliament/",
     },
     {
       "id": "about",
       "title": "เกี่ยวกับพรรค",
       "imagePath": Assets.assetsIconPpleIconTransparentO,
-      "url": "https://www.peoplespartythailand.org/about/",
+      "url": "https://peoplesparty.or.th/about/",
     },
     {
       "id": "contact",

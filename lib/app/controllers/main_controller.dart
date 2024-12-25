@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
-import 'package:device_information/device_information.dart';
+// import 'package:device_information/device_information.dart';
 import 'package:firebase_remote_config/firebase_remote_config.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
@@ -43,10 +43,10 @@ class MainController extends AppLifecycleStateController {
     final prefs = await SharedPreferences.getInstance();
     String tokenFCM = prefs.getString(StorageKeys.tokenFCM) ?? '';
 
-    String deviceName = await DeviceInformation.deviceName;
+    // String deviceName = await DeviceInformation.deviceName;
 
     await UserService().guest(
-      deviceName: deviceName,
+      deviceName: 'deviceName',
       tokenFCM: tokenFCM,
       os: Platform.operatingSystem,
     );

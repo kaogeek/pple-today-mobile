@@ -20,18 +20,26 @@ class NotificationService extends GetConnect {
         ? jsonEncode({
             'offset': offset,
             'limit': limit,
-            'orderBy': {'createdDate': 'DESC'},
+            "count": false,
+            'orderBy': {'createdDate': -1},
             'whereConditions': {
               'deleted': false,
+              "type": {
+                "\$ne": "OBJECTIVE",
+              }
             },
           })
         : jsonEncode({
             'offset': offset,
             'limit': limit,
-            'orderBy': {'createdDate': 'DESC'},
+            "count": false,
+            'orderBy': {'createdDate': -1},
             'whereConditions': {
               'isRead': false,
               'deleted': false,
+              "type": {
+                "\$ne": "OBJECTIVE",
+              }
             },
           });
 
@@ -40,7 +48,7 @@ class NotificationService extends GetConnect {
       'authorization': 'Bearer $token',
       'mode': mode,
     };
- 
+
     Response response = await post(
       url,
       body,

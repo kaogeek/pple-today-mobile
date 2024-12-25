@@ -17,7 +17,7 @@ import '../../../utils/storage_keys.dart';
 class TodayPostList extends StatelessWidget {
   final int index;
 
-  TodayPostList(this.index, {Key? key}) : super(key: key);
+  TodayPostList(this.index, {super.key});
 
   TodayController controller = Get.put(TodayController());
   UserGeneratedContentController ugcController = Get.put(UserGeneratedContentController());
@@ -26,41 +26,41 @@ class TodayPostList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final _data = controller.postStoryModel.data![index];
+    final data = controller.postStoryModel.data![index];
 
     return PostCard(
       key: key,
-      pageId: _data.post!.page?.id ?? _data.post!.pageId!,
-      postId: _data.post!.id!,
-      typePost: _data.post!.type ?? 'GENERAL',
-      imageUrl: _data.post!.page?.imageUrl ?? '',
-      displayName: _data.post!.page?.name ?? _data.user?.displayName ?? '',
-      createdDate: _data.post!.createdDate,
+      pageId: data.post!.page?.id ?? data.post!.pageId!,
+      postId: data.post!.id!,
+      typePost: data.post!.type ?? 'GENERAL',
+      imageUrl: data.post!.page?.imageUrl ?? '',
+      displayName: data.post!.page?.name ?? data.user?.displayName ?? '',
+      createdDate: data.post!.createdDate,
       onPressedUGC: _onReportBottomSheet,
-      gallery: _data.post!.gallery ?? [],
-      titlePost: _data.post!.title ?? '',
-      detailPost: _data.post!.detail ?? '',
-      storyPost: _data.post!.story,
+      gallery: data.post!.gallery ?? [],
+      titlePost: data.post!.title ?? '',
+      detailPost: data.post!.detail ?? '',
+      storyPost: data.post!.story,
       onPressedStory: _onTapReadStory,
-      isLike: _data.post!.isLike ?? false,
-      likeCount: _data.post!.likeCount ?? 0,
+      isLike: data.post!.isLike ?? false,
+      likeCount: data.post!.likeCount ?? 0,
       onPressedLike: _onTapLike,
       isComment: false,
-      commentCount: _data.post!.commentCount ?? 0,
+      commentCount: data.post!.commentCount ?? 0,
       onPressedComment: _onTapComment,
     );
   }
 
   // *UGC
   Future<void> _onReportBottomSheet() async {
-    final _data = controller.postStoryModel.data![index];
+    final data = controller.postStoryModel.data![index];
 
     await bottomSheetUGC(
       onHide: () {
-        ugcController.fetchHidePost(_data.post!.id!);
+        ugcController.fetchHidePost(data.post!.id!);
 
         controller.postStoryModel.data!.removeWhere(
-          (element) => element.post!.id == _data.post!.id!,
+          (element) => element.post!.id == data.post!.id!,
         );
         controller.update();
 
@@ -117,7 +117,7 @@ class TodayPostList extends StatelessWidget {
                                   buttonColor: Colors.white,
                                   onConfirm: () async {
                                     ugcController.fetchReportPostPageUser(
-                                      id: _data.post!.id!,
+                                      id: data.post!.id!,
                                       type: 'POST',
                                       topic: e.value.detail ?? '',
                                       message: ugcController.msgReportTextController.text,
@@ -145,8 +145,8 @@ class TodayPostList extends StatelessWidget {
               );
             },
       onBlock: () async {
-        String pageId = _data.post!.page?.id ?? _data.post!.pageId ?? '';
-        String pageName = _data.post!.page?.name ?? '';
+        String pageId = data.post!.page?.id ?? data.post!.pageId ?? '';
+        String pageName = data.post!.page?.name ?? '';
 
         ugcController.fetchBlockPageUser(
           id: pageId,
@@ -233,11 +233,11 @@ class TodayPostList extends StatelessWidget {
     bool memberShip = CheckMemberShip().get(controller.postStoryModel.data![index].post!.type!);
     if (!memberShip) return;
 
-    final _data = controller.postStoryModel.data![index];
+    final data = controller.postStoryModel.data![index];
     Get.toNamed(
       AppRoutes.POST_DETAIL,
       arguments: {
-        'POST_ID': _data.post!.id!,
+        'POST_ID': data.post!.id!,
         'FOCUS': true,
       },
     );

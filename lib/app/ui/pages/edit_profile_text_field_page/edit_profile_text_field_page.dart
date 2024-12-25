@@ -13,7 +13,7 @@ import '../../utils/assets.dart';
 import '../../utils/colors.dart';
 
 class EditProfileTextFieldPage extends GetView<EditProfileTextFieldController> {
-  EditProfileTextFieldPage({Key? key}) : super(key: key);
+  EditProfileTextFieldPage({super.key});
 
   final _profileController = Get.put(ProfileController());
   final _editController = Get.put(EditProfileController());
@@ -31,7 +31,7 @@ class EditProfileTextFieldPage extends GetView<EditProfileTextFieldController> {
         centerTitle: true,
         title: Text(
           controller.title,
-          style: Get.textTheme.headline6?.copyWith(
+          style: Get.textTheme.titleLarge?.copyWith(
             color: Colors.black,
             fontFamily: Assets.assetsFontsAnakotmaiMedium,
           ),
@@ -41,7 +41,7 @@ class EditProfileTextFieldPage extends GetView<EditProfileTextFieldController> {
             onPressed: _onSave,
             child: Text(
               'บันทึก',
-              style: Get.textTheme.bodyText1?.copyWith(
+              style: Get.textTheme.bodyLarge?.copyWith(
                 color: kPrimaryColor,
                 fontFamily: Assets.assetsFontsAnakotmaiMedium,
                 fontSize: 18,
@@ -59,7 +59,7 @@ class EditProfileTextFieldPage extends GetView<EditProfileTextFieldController> {
               controller.title == 'วันเกิด'
                   ? TextField(
                       controller: controller.textController,
-                      style: Get.textTheme.bodyText1?.copyWith(
+                      style: Get.textTheme.bodyLarge?.copyWith(
                         color: Colors.black,
                         fontSize: 20,
                       ),
@@ -82,7 +82,7 @@ class EditProfileTextFieldPage extends GetView<EditProfileTextFieldController> {
                   : TextField(
                       focusNode: controller.focusNode,
                       controller: controller.textController,
-                      style: Get.textTheme.bodyText1?.copyWith(
+                      style: Get.textTheme.bodyLarge?.copyWith(
                         color: Colors.black,
                         fontSize: 20,
                       ),
@@ -95,7 +95,7 @@ class EditProfileTextFieldPage extends GetView<EditProfileTextFieldController> {
                     ),
               Text(
                 'คุณสามารถเปลี่ยน${controller.title}ของคุณได้อีกครั้ง 7 วันหลังจากนี้',
-                style: Get.textTheme.bodyText1?.copyWith(
+                style: Get.textTheme.bodyLarge?.copyWith(
                   color: Colors.grey,
                 ),
               ),

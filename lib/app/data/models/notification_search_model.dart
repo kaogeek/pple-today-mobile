@@ -101,7 +101,7 @@ class Notification {
     createdByUsername = json["createdByUsername"];
     updateDate = json["updateDate"] == null ? null : DateTime.parse(json["updateDate"]);
     updateByUsername = json["updateByUsername"];
-    id = json["id"];
+    id = json["id"] ?? json["_id"] ?? '';
     title = json["title"];
     fromUser = json["fromUser"];
     toUser = json["toUser"];

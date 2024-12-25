@@ -10,7 +10,7 @@ import '../../../utils/colors.dart';
 import 'text_field_forgot_pass.dart';
 
 class FormPass extends StatelessWidget {
-  FormPass({Key? key}) : super(key: key);
+  FormPass({super.key});
 
   ForgotPasswordController controller = Get.put(ForgotPasswordController());
 
@@ -164,6 +164,7 @@ class FormPass extends StatelessWidget {
                     side: const BorderSide(color: Colors.red),
                   ),
                 ),
+                onPressed: _submitPass,
                 child: const Text(
                   'ถัดไป',
                   style: TextStyle(
@@ -171,7 +172,6 @@ class FormPass extends StatelessWidget {
                     color: Colors.white,
                   ),
                 ),
-                onPressed: _submitPass,
               ),
             ),
             const AllRightsReserve(),

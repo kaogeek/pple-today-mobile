@@ -1,7 +1,9 @@
 import 'dart:developer';
 
+import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
+import 'package:webview_flutter/webview_flutter.dart';
 
 import '../data/models/base_model.dart';
 import '../data/services/user_service.dart';
@@ -15,14 +17,49 @@ class WebViewLoginMfpController extends GetxController {
   String url = Get.arguments['URL'];
   // String title = Get.arguments['TITLE'];
 
-  double isProgress = 0.0;
+  RxDouble isProgress = 0.0.obs;
+  RxBool isLoading = true.obs;
 
-  bool isLoading = true;
+//   final CookieManager _cookieManager = CookieManager();
 
   @override
   void onInit() {
-    super.onInit();
     log('URL: $url');
+    // if (GetPlatform.isAndroid) WebView.platform = SurfaceAndroidWebView();
+    // webViewController = WebViewController()
+    //   ..setJavaScriptMode(JavaScriptMode.unrestricted)
+    //   ..setNavigationDelegate(NavigationDelegate(
+    //     onPageStarted: (_) {
+    //       isLoading = false;
+    //       update();
+    //     },
+    //     onPageFinished: (_) {
+    //       isLoading = false;
+    //       update();
+    //     },
+    //     onProgress: (progress) {
+    //       isProgress = progress / 100;
+    //       update();
+    //     },
+    //   ))
+    //   ..loadRequest(Uri.parse(url));
+    super.onInit();
+  }
+
+  @override
+  void onClose() {
+    _clearCache();
+    super.onClose();
+  }
+
+  Future<void> _clearCache() async {
+    // await webViewController.clearCache(); // ล้างแคช
+    // final cookiesCleared = await _cookieManager.clearCookies(); // ล้าง cookies
+    // if (cookiesCleared) {
+    //   debugPrint("Cookies cleared.");
+    // } else {
+    //   debugPrint("No cookies to clear.");
+    // }
   }
 
   Future<BaseModel> fetchBindingMember(String tokenMFP) async {

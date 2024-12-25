@@ -9,7 +9,7 @@ import '../../utils/colors.dart';
 import 'widgets/card_post.dart';
 
 class HashTagPage extends GetView<HashTagController> {
-  const HashTagPage({Key? key}) : super(key: key);
+  const HashTagPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +37,7 @@ class HashTagPage extends GetView<HashTagController> {
               child: Text(
                 '#'
                 '${controller.emerTag.isNotEmpty ? controller.emerTag : controller.hashTag}',
-                style: Get.theme.textTheme.headline6!.copyWith(
+                style: Get.theme.textTheme.titleLarge!.copyWith(
                   color: Colors.grey,
                   fontWeight: FontWeight.bold,
                   fontSize: 16,
@@ -67,7 +67,7 @@ class HashTagPage extends GetView<HashTagController> {
                     return Center(
                       child: Text(
                         'ไม่พบข้อมูล',
-                        style: Get.theme.textTheme.headline6!.copyWith(
+                        style: Get.theme.textTheme.titleLarge!.copyWith(
                           color: Colors.grey,
                           fontWeight: FontWeight.bold,
                           fontSize: 16,
@@ -89,7 +89,7 @@ class HashTagPage extends GetView<HashTagController> {
                               child: Text(
                                 '#'
                                 '${controller.hashTag}',
-                                style: Get.theme.textTheme.headline4!.copyWith(
+                                style: Get.theme.textTheme.headlineMedium!.copyWith(
                                   color: Colors.black,
                                   // fontWeight: FontWeight.bold,
                                   fontFamily: Assets.assetsFontsAnakotmaiMedium,

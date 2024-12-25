@@ -16,7 +16,7 @@ import 'post_detail_comment_view.dart';
 import 'post_detail_view.dart';
 
 class PostDetailBody extends StatelessWidget {
-  PostDetailBody({Key? key}) : super(key: key);
+  PostDetailBody({super.key});
 
   PostDetailController controller = Get.put(PostDetailController());
   TodayController todayController = Get.find();

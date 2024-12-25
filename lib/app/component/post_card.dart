@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mfp_app/app/component/read_more_text.dart';
 
 import '../routes/app_routes.dart';
 import '../ui/utils/assets.dart';
@@ -9,6 +8,7 @@ import '../ui/utils/environment.dart';
 import 'album_card.dart';
 import 'button_social.dart';
 import 'convert_time_componenet.dart';
+import 'read_more_text.dart';
 
 class PostCard extends StatelessWidget {
   final String? pageId;
@@ -31,7 +31,7 @@ class PostCard extends StatelessWidget {
   final VoidCallback onPressedComment;
 
   const PostCard({
-    Key? key,
+    super.key,
     required this.pageId,
     required this.postId,
     required this.typePost,
@@ -50,12 +50,13 @@ class PostCard extends StatelessWidget {
     required this.isComment,
     required this.commentCount,
     required this.onPressedComment,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
     return Card(
       elevation: 0,
+      color: Colors.white,
       shape: RoundedRectangleBorder(
         side: BorderSide(
           color: Colors.grey.shade200,

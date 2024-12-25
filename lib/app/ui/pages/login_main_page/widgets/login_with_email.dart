@@ -77,11 +77,11 @@ class LoginWithEmail extends StatelessWidget {
               child: ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   padding: const EdgeInsets.only(top: 15, bottom: 15),
+                  backgroundColor: controller.isValidateLogin ? kPrimaryColor : kPrimaryColor.withOpacity(.5),
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(30),
                     side: const BorderSide(color: Colors.red),
                   ),
-                  primary: controller.isValidateLogin ? kPrimaryColor : kPrimaryColor.withOpacity(.5),
                 ),
                 child: const Text(
                   'เข้าสู่ระบบ',

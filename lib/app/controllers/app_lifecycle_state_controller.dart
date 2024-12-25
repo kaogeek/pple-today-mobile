@@ -6,15 +6,13 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get_storage/get_storage.dart';
-import 'package:uni_links/uni_links.dart' as UniLink;
+// import 'package:uni_links/uni_links.dart' as UniLink;
 
 import '../routes/app_routes.dart';
 import '../ui/utils/storage_keys.dart';
 import 'mfp_vote_dashboard_controller.dart';
 
 class AppLifecycleStateController extends GetxController with WidgetsBindingObserver {
-  final DateTime _dateNow = DateTime.now();
-
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     super.didChangeAppLifecycleState(state);
@@ -90,67 +88,83 @@ class AppLifecycleStateController extends GetxController with WidgetsBindingObse
   Future<void> initUniLinks() async {
     debugPrint('_INITUNILINKS');
 
-    try {
-      final String? link = await UniLink.getInitialLink();
-      debugPrint('LINK: $link');
+    // try {
+    //   final String? link = await UniLink.getInitialLink();
+    //   debugPrint('LINK: $link');
 
-      if (link != null) {
-        String path = link.replaceFirst('https://today.pplethai.org/', '');
+    //   if (link != null) {
+    //     String path = link.replaceFirst('https://today.peoplesparty.or.th/', '');
 
-        late String type;
-        type = path.split('/').first.toUpperCase();
-        if (type.contains('HOME')) type = 'HOME';
-        debugPrint('INIT_UNI_LINKS_TYPE: $type', wrapWidth: 1024);
+    //     late String type;
+    //     type = path.split('/').first.toUpperCase();
+    //     if (type.contains('HOME')) type = 'HOME';
+    //     debugPrint('INIT_UNI_LINKS_TYPE: $type', wrapWidth: 1024);
 
-        await GetStorage().write(StorageKeys.initLink, link);
+    //     await GetStorage().write(StorageKeys.initLink, link);
 
-        _navigationToPage(
-          type: type,
-          link: link,
-        );
-      }
-    } catch (e) {
-      log('', error: e, name: 'UNILINKS');
-      // Handle exception by warning the user their action did not succeed
-      // return
-    }
+    //     _navigationToPage(
+    //       type: type,
+    //       link: link,
+    //     );
+    //   }
+    // } catch (e) {
+    //   log('', error: e, name: 'UNILINKS');
+    //   // Handle exception by warning the user their action did not succeed
+    //   // return
+    // }
   }
 
   Future<void> streamUniLinks() async {
     debugPrint('_STREAMUNILINKS');
 
-    try {
-      final String? link = await UniLink.linkStream.first;
-      debugPrint('LINK: $link');
+    // try {
+    //   final String? link = await UniLink.linkStream.first;
+    //   debugPrint('LINK: $link');
 
-      if (link != null) {
-        String path = link.replaceFirst('https://today.pplethai.org/', '');
+    //   if (link != null) {
+    //     String path = link.replaceFirst('https://today.peoplesparty.or.th/', '');
 
-        late String type;
-        type = path.split('/').first.toUpperCase();
-        if (type.startsWith('HOME?')) type = 'HOME';
-        debugPrint('STREAM_UNI_LINKS_TYPE: $type', wrapWidth: 1024);
+    //     late String type;
+    //     type = path.split('/').first.toUpperCase();
+    //     if (type.startsWith('HOME?')) type = 'HOME';
+    //     debugPrint('STREAM_UNI_LINKS_TYPE: $type', wrapWidth: 1024);
 
-        _navigationToPage(
-          type: type,
-          link: link,
-        );
-      }
-    } catch (e) {
-      log('', error: e, name: 'UNILINKS');
-      // Handle exception by warning the user their action did not succeed
-      // return
-    }
+    //     _navigationToPage(
+    //       type: type,
+    //       link: link,
+    //     );
+    //   }
+    // } catch (e) {
+    //   log('', error: e, name: 'UNILINKS');
+    //   // Handle exception by warning the user their action did not succeed
+    //   // return
+    // }
   }
 
   Future<void> _navigationToPage({required String type, required String link}) async {
     switch (type) {
       /// App Link
       case 'PAGE':
+        // Uri _uri = Uri.parse(link);
+        // String path = _uri.pathSegments.first.toUpperCase();
+        // String noti = _uri.queryParameters['noti'] ?? '';
+        // if (noti.isNotEmpty) {
+        //   Get.toNamed(
+        //     AppRoutes.PAGE_PROFILE,
+        //     arguments: {'PAGE_ID': link.split('/').last},
+        //   );
+        // } else {
+        //   Get.toNamed(
+        //     AppRoutes.PAGE_PROFILE,
+        //     arguments: {'PAGE_ID': link.split('/').last},
+        //   );
+        // }
+
         Get.toNamed(
           AppRoutes.PAGE_PROFILE,
           arguments: {'PAGE_ID': link.split('/').last},
         );
+
         break;
 
       case 'USER':
@@ -194,14 +208,14 @@ class AppLifecycleStateController extends GetxController with WidgetsBindingObse
 
       /// RemoteMessage NotificationType
       case 'TODAY_NEWS':
-        Uri _uri = Uri.parse(link);
-        String date = _uri.queryParameters['date'] ?? '';
+        Uri uri = Uri.parse(link);
+        String date = uri.queryParameters['date'] ?? '';
 
         /// check date format is ##-##-#### to ####-##-##
         final RegExp regex = RegExp(r'^\d{2}-\d{2}-\d{4}$');
         if (date.isNotEmpty && regex.hasMatch(date)) {
-          List<String> _date = date.split('-');
-          date = '${_date[2]}-${_date[1]}-${_date[0]}';
+          List<String> date0 = date.split('-');
+          date = '${date0[2]}-${date0[1]}-${date0[0]}';
 
           Get.toNamed(
             AppRoutes.DETAIL_FIRST,
@@ -215,8 +229,8 @@ class AppLifecycleStateController extends GetxController with WidgetsBindingObse
         /// check date format is ##/##/#### to ####-##-##
         final RegExp regex2 = RegExp(r'^\d{2}/\d{2}/\d{4}$');
         if (date.isNotEmpty && regex2.hasMatch(date)) {
-          List<String> _date = date.split('/');
-          date = '${_date[2]}-${_date[1]}-${_date[0]}';
+          List<String> date0 = date.split('/');
+          date = '${date0[2]}-${date0[1]}-${date0[0]}';
 
           Get.toNamed(
             AppRoutes.DETAIL_FIRST,
@@ -242,8 +256,8 @@ class AppLifecycleStateController extends GetxController with WidgetsBindingObse
         /// check date format is ####/##/## to ####-##-##
         final RegExp regex4 = RegExp(r'^\d{4}/\d{2}/\d{2}$');
         if (date.isNotEmpty && regex4.hasMatch(date)) {
-          List<String> _date = date.split('/');
-          date = '${_date[0]}-${_date[1]}-${_date[2]}';
+          List<String> date0 = date.split('/');
+          date = '${date0[0]}-${date0[1]}-${date0[2]}';
 
           Get.toNamed(
             AppRoutes.DETAIL_FIRST,
@@ -256,14 +270,14 @@ class AppLifecycleStateController extends GetxController with WidgetsBindingObse
         break;
 
       case 'HOME':
-        Uri _uri = Uri.parse(link);
-        String date = _uri.queryParameters['date'] ?? '';
+        Uri uri = Uri.parse(link);
+        String date = uri.queryParameters['date'] ?? '';
 
         /// check date format is ##-##-#### to ####-##-##
         final RegExp regex = RegExp(r'^\d{2}-\d{2}-\d{4}$');
         if (date.isNotEmpty && regex.hasMatch(date)) {
-          List<String> _date = date.split('-');
-          date = '${_date[2]}-${_date[1]}-${_date[0]}';
+          List<String> date0 = date.split('-');
+          date = '${date0[2]}-${date0[1]}-${date0[0]}';
 
           Get.toNamed(
             AppRoutes.DETAIL_FIRST,
@@ -277,8 +291,8 @@ class AppLifecycleStateController extends GetxController with WidgetsBindingObse
         /// check date format is ##/##/#### to ####-##-##
         final RegExp regex2 = RegExp(r'^\d{2}/\d{2}/\d{4}$');
         if (date.isNotEmpty && regex2.hasMatch(date)) {
-          List<String> _date = date.split('/');
-          date = '${_date[2]}-${_date[1]}-${_date[0]}';
+          List<String> date0 = date.split('/');
+          date = '${date0[2]}-${date0[1]}-${date0[0]}';
 
           Get.toNamed(
             AppRoutes.DETAIL_FIRST,
@@ -304,8 +318,8 @@ class AppLifecycleStateController extends GetxController with WidgetsBindingObse
         /// check date format is ####/##/## to ####-##-##
         final RegExp regex4 = RegExp(r'^\d{4}/\d{2}/\d{2}$');
         if (date.isNotEmpty && regex4.hasMatch(date)) {
-          List<String> _date = date.split('/');
-          date = '${_date[0]}-${_date[1]}-${_date[2]}';
+          List<String> date0 = date.split('/');
+          date = '${date0[0]}-${date0[1]}-${date0[2]}';
 
           Get.toNamed(
             AppRoutes.DETAIL_FIRST,
@@ -347,8 +361,8 @@ class AppLifecycleStateController extends GetxController with WidgetsBindingObse
             arguments: {'VOTE_ID': ''},
           );
         } else {
-          final _controller = Get.put(MfpVoteDashboardController());
-          await _controller.fetchGetVoteDetail(link.split('/').last);
+          final controller = Get.put(MfpVoteDashboardController());
+          await controller.fetchGetVoteDetail(link.split('/').last);
         }
         break;
 

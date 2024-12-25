@@ -11,13 +11,13 @@ class ListTileComponent extends StatelessWidget {
   final Color? color;
 
   const ListTileComponent({
-    Key? key,
+    super.key,
     required this.title,
     required this.trailing,
     required this.onTap,
     this.type = ListTileType.info,
     this.color,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

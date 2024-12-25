@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
 import 'package:jwt_decoder/jwt_decoder.dart';
 import 'package:get/get.dart';
 
@@ -376,11 +377,13 @@ class UserService extends GetConnect {
         break;
     }
 
-    String _mode = mode.toString().toUpperCase().split(".").last;
+    String mode0 = mode.toString().toUpperCase().split(".").last;
+
+    debugPrint("body : $body", wrapWidth: 1024);
 
     Map<String, String> headers = {
       "content-type": defaultContentType,
-      "mode": _mode,
+      "mode": mode0,
     };
 
     Response response = await post(
@@ -488,11 +491,11 @@ class UserService extends GetConnect {
         break;
     }
 
-    String _mode = mode.toString().toUpperCase().split(".").last;
+    String mode0 = mode.toString().toUpperCase().split(".").last;
 
     Map<String, String> headers = {
       "content-type": defaultContentType,
-      "mode": _mode,
+      "mode": mode0,
     };
 
     Response response = await post(
@@ -708,28 +711,28 @@ class UserService extends GetConnect {
   }) async {
     String url = "${Environment.apiURL}/api/profile/$uid";
 
-    Map _body = {};
+    Map body0 = {};
 
     if (displayName != null) {
-      _body.addAll({"displayName": displayName});
+      body0.addAll({"displayName": displayName});
     }
     if (firstName != null) {
-      _body.addAll({"firstName": firstName});
+      body0.addAll({"firstName": firstName});
     }
     if (lastName != null) {
-      _body.addAll({"lastName": lastName});
+      body0.addAll({"lastName": lastName});
     }
     if (birthdate != null) {
-      _body.addAll({"birthdate": birthdate});
+      body0.addAll({"birthdate": birthdate});
     }
     if (gender != null) {
-      _body.addAll({"gender": gender});
+      body0.addAll({"gender": gender});
     }
     if (province != null) {
-      _body.addAll({"province": province});
+      body0.addAll({"province": province});
     }
 
-    String body = jsonEncode(_body);
+    String body = jsonEncode(body0);
 
     Map<String, String> headers = {
       "content-type": defaultContentType,
@@ -947,7 +950,7 @@ class UserService extends GetConnect {
     String url = "${Environment.apiURL}/api/user/report/hide";
 
     String body = jsonEncode({
-      "postId": postId,
+      "postId": [postId],
     });
 
     Map<String, String> headers = {

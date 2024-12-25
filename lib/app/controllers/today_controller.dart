@@ -127,7 +127,7 @@ class TodayController extends GetxController {
     int limit = 10,
   }) async {
     String uid = _box.read(StorageKeys.uid) ?? '';
-    List<String> _listBlockUser = _box.read(StorageKeys.blockUser) ?? [];
+    List<String> listBlockUser = _box.read(StorageKeys.blockUser) ?? [];
 
     try {
       String? result = await _service.getPostStory(
@@ -146,9 +146,9 @@ class TodayController extends GetxController {
       isNotPostStory = (model.data ?? []).isEmpty || model.data!.length < limit;
 
       // *UGC
-      final _resultModel = model.data!.where((element) => !_listBlockUser.contains(element.post?.page?.id ?? element.post?.pageId ?? '')).toList();
+      final resultModel = model.data!.where((element) => !listBlockUser.contains(element.post?.page?.id ?? element.post?.pageId ?? '')).toList();
 
-      model.data = _resultModel;
+      model.data = resultModel;
 
       offset != 0 ? postStoryModel.data!.addAll(model.data ?? []) : postStoryModel = model;
 

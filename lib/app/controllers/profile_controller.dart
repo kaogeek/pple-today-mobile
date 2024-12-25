@@ -3,7 +3,6 @@
 import 'dart:developer';
 import 'dart:io';
 
-import 'package:device_information/device_information.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
@@ -223,10 +222,10 @@ class ProfileController extends GetxController {
   Future<void> fetchGuest() async {
     String tokenFCM = _box.read(StorageKeys.tokenFCM) ?? '';
 
-    String deviceName = await DeviceInformation.deviceName;
+    // String deviceName = await DeviceInformation.deviceName;
 
     await _service.guest(
-      deviceName: deviceName,
+      deviceName: 'deviceName',
       tokenFCM: tokenFCM,
       os: Platform.operatingSystem,
     );

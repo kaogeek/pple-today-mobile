@@ -22,17 +22,17 @@ class UnbindingButton extends GetWidget<ProfileController> {
         child: ElevatedButton(
           style: ElevatedButton.styleFrom(
             padding: const EdgeInsets.symmetric(vertical: 16),
+            backgroundColor: Colors.white,
             shape: RoundedRectangleBorder(
               borderRadius: BorderRadius.circular(30),
               side: BorderSide(color: Colors.grey.shade300),
             ),
-            primary: Colors.white,
             shadowColor: Colors.transparent,
           ),
           onPressed: () async {
             await unbindingMFP();
           },
-          child: Text(
+          child: const Text(
             'ยกเลิกการเชื่อมบัญชี',
             style: TextStyle(
               fontSize: 16,

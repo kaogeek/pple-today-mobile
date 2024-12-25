@@ -2,13 +2,13 @@
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:mfp_app/app/data/models/register_model.dart';
 
 import '../../../component/loading.dart';
 import '../../../component/my_dialog.dart';
 import '../../../controllers/login_main_controller.dart';
 import '../../../controllers/register_controller.dart';
 import '../../../controllers/register_preview_controller.dart';
+import '../../../data/models/register_model.dart';
 import '../../../routes/app_routes.dart';
 import '../../layouts/main/widgets/main_layout_view.dart';
 import '../../utils/assets.dart';
@@ -16,7 +16,7 @@ import '../../utils/enum.dart';
 import '../register_page/widgets/button_submit.dart';
 
 class RegisterPreviewPage extends GetView<RegisterPreviewController> {
-  RegisterPreviewPage({Key? key}) : super(key: key);
+  RegisterPreviewPage({super.key});
 
   LoginMainController loginController = Get.put(LoginMainController());
 
@@ -32,7 +32,7 @@ class RegisterPreviewPage extends GetView<RegisterPreviewController> {
           Container(
             height: 80,
             width: 160,
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               image: DecorationImage(
                 image: AssetImage(
                   // TODO: Change to MFP logo
@@ -48,7 +48,7 @@ class RegisterPreviewPage extends GetView<RegisterPreviewController> {
         constraints: const BoxConstraints.expand(),
         decoration: BoxDecoration(
           image: DecorationImage(
-            image: AssetImage(Assets.assetsImagesShutterstock553511089),
+            image: const AssetImage(Assets.assetsImagesShutterstock553511089),
             colorFilter: ColorFilter.mode(
               Colors.grey.shade700,
               BlendMode.modulate,
@@ -77,7 +77,7 @@ class RegisterPreviewPage extends GetView<RegisterPreviewController> {
                                   radius: 108,
                                   backgroundImage: FileImage(registerController.profileImage),
                                 )
-                              : CircleAvatar(
+                              : const CircleAvatar(
                                   radius: 108,
                                   backgroundImage: AssetImage(Assets.assetsImagesPlaceholderPNG),
                                 ),

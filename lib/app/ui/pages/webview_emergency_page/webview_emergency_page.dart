@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:webview_flutter/webview_flutter.dart';
@@ -12,9 +10,10 @@ import '../../utils/environment.dart';
 import 'widgets/my_app_bar.dart';
 
 class WebviewEmergencyPage extends GetView<WebviewEmergencyController> {
-  WebviewEmergencyPage({Key? key}) : super(key: key);
+  WebviewEmergencyPage({super.key});
 
-  final _controller = Completer<WebViewController>();
+  @override
+  final WebviewEmergencyController controller = Get.put(WebviewEmergencyController());
 
   @override
   Widget build(BuildContext context) {
@@ -23,53 +22,54 @@ class WebviewEmergencyPage extends GetView<WebviewEmergencyController> {
         title: controller.title,
         iconImage: controller.iconImage,
       ),
-      body: GetBuilder<WebviewEmergencyController>(
-        init: WebviewEmergencyController(),
-        initState: (_) {},
-        builder: (_) {
-          return Stack(
-            children: [
-              WebView(
-                initialUrl: controller.url,
-                javascriptMode: JavascriptMode.unrestricted,
-                gestureNavigationEnabled: true,
-                onPageFinished: (finish) {
-                  controller.isLoading = false;
-                  controller.update();
-                },
-                onProgress: (progress) {
-                  controller.isProgress = progress / 100;
-                  controller.update();
-                },
-                navigationDelegate: _navigationDelegate,
-                onWebViewCreated: (WebViewController webViewController) async {
-                  _controller.complete(webViewController);
-                },
-              ),
-              if (controller.isLoading)
-                LinearProgressIndicator(
-                  backgroundColor: Colors.transparent,
-                  valueColor: const AlwaysStoppedAnimation<Color>(
-                    kPrimaryColor,
-                  ),
-                  value: controller.isProgress,
+      body: Stack(
+        children: [
+          WebViewWidget(
+            controller: WebViewController()
+              ..setJavaScriptMode(JavaScriptMode.unrestricted)
+              ..setNavigationDelegate(
+                NavigationDelegate(
+                  onProgress: (int progress) {
+                    controller.isProgress.value = progress / 100;
+                  },
+                  onPageStarted: (String url) {
+                    controller.isLoading.value = true;
+                  },
+                  onPageFinished: (String url) {
+                    controller.isLoading.value = false;
+                  },
+                  onHttpError: (HttpResponseError error) {
+                    debugPrint("HttpResponseError : $error", wrapWidth: 1024);
+                  },
+                  onWebResourceError: (WebResourceError error) {
+                    debugPrint("WebResourceError : $error", wrapWidth: 1024);
+                  },
+                  onNavigationRequest: _navigationDelegate,
                 ),
-            ],
-          );
-        },
+              )
+              ..loadRequest(Uri.parse(controller.url)),
+          ),
+          Obx(() => controller.isLoading.value
+              ? LinearProgressIndicator(
+                  backgroundColor: Colors.transparent,
+                  valueColor: const AlwaysStoppedAnimation<Color>(kPrimaryColor),
+                  value: controller.isProgress.value,
+                )
+              : SizedBox.shrink()),
+        ],
       ),
     );
   }
 
   NavigationDecision _navigationDelegate(navigation) {
-    final String _domain = Environment.domainName;
+    final String domain = Environment.domainName;
     // debugPrint('_DOMAIN: $_domain');
-    final String _url = Uri.decodeComponent(navigation.url);
-    debugPrint('--- URL: $_url');
+    final String url = Uri.decodeComponent(navigation.url);
+    debugPrint('--- URL: $url');
 
-    bool isPage = _url.startsWith('$_domain/page/');
+    bool isPage = url.startsWith('$domain/page/');
     if (isPage) {
-      String pageId = _url.replaceFirst('$_domain/page/', '');
+      String pageId = url.replaceFirst('$domain/page/', '');
       Get.toNamed(
         AppRoutes.PAGE_PROFILE,
         arguments: {'PAGE_ID': pageId},
@@ -78,9 +78,9 @@ class WebviewEmergencyPage extends GetView<WebviewEmergencyController> {
       return NavigationDecision.prevent;
     }
 
-    bool isPost = _url.startsWith('$_domain/post/');
+    bool isPost = url.startsWith('$domain/post/');
     if (isPost) {
-      String postId = _url.replaceFirst('$_domain/post/', '');
+      String postId = url.replaceFirst('$domain/post/', '');
       Get.toNamed(
         AppRoutes.POST_DETAIL,
         arguments: {'POST_ID': postId},
@@ -89,20 +89,18 @@ class WebviewEmergencyPage extends GetView<WebviewEmergencyController> {
       return NavigationDecision.prevent;
     }
 
-    bool isEmergency = _url.startsWith('$_domain/emergencyevent/');
+    bool isEmergency = url.startsWith('$domain/emergencyevent/');
     if (isEmergency) {
       // final regExp = RegExp(r'^[a-z0-9]+$');
       // bool split = regExp.hasMatch(emergencyId);
       // debugPrint('SPLIT: $split');
 
-      String realLink = _url.replaceAll('?hidebar=true', '');
-      String emergencyId = realLink.replaceFirst('$_domain/emergencyevent/', '').split('/').first;
+      String realLink = url.replaceAll('?hidebar=true', '');
+      String emergencyId = realLink.replaceFirst('$domain/emergencyevent/', '').split('/').first;
 
-      bool isHashTag = _url.startsWith('$_domain/emergencyevent/$emergencyId/search?hashtag=');
+      bool isHashTag = url.startsWith('$domain/emergencyevent/$emergencyId/search?hashtag=');
       if (isHashTag) {
-        String queryEncode = _url
-            .replaceFirst('$_domain/emergencyevent/$emergencyId/search?', '')
-            .replaceAllMapped(RegExp('[ก-๙]'), (match) {
+        String queryEncode = url.replaceFirst('$domain/emergencyevent/$emergencyId/search?', '').replaceAllMapped(RegExp('[ก-๙]'), (match) {
           return Uri.encodeComponent('${match.group(0)}');
         });
 
@@ -119,15 +117,14 @@ class WebviewEmergencyPage extends GetView<WebviewEmergencyController> {
       }
     }
 
-    bool isObjective = _url.startsWith('$_domain/objective/');
+    bool isObjective = url.startsWith('$domain/objective/');
     if (isObjective) {
-      String realLink = _url.replaceAll('?hidebar=true', '');
-      String objectiveId = realLink.replaceFirst('$_domain/objective/', '').split('/').first;
+      String realLink = url.replaceAll('?hidebar=true', '');
+      String objectiveId = realLink.replaceFirst('$domain/objective/', '').split('/').first;
 
-      bool isHashTag = _url.startsWith('$_domain/objective/$objectiveId/search?hashtag=');
+      bool isHashTag = url.startsWith('$domain/objective/$objectiveId/search?hashtag=');
       if (isHashTag) {
-        String queryEncode =
-            _url.replaceFirst('$_domain/objective/$objectiveId/search?', '').replaceAllMapped(RegExp('[ก-๙]'), (match) {
+        String queryEncode = url.replaceFirst('$domain/objective/$objectiveId/search?', '').replaceAllMapped(RegExp('[ก-๙]'), (match) {
           return Uri.encodeComponent('${match.group(0)}');
         });
 
@@ -144,9 +141,9 @@ class WebviewEmergencyPage extends GetView<WebviewEmergencyController> {
       }
     }
 
-    bool isSearch = _url.startsWith('$_domain/search');
+    bool isSearch = url.startsWith('$domain/search');
     if (isSearch) {
-      String realQuery = _url.replaceFirst('$_domain/search?', '');
+      String realQuery = url.replaceFirst('$domain/search?', '');
       String params = realQuery.split('=').first;
 
       switch (params) {

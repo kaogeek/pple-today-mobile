@@ -24,11 +24,11 @@ class ButtonSubmit extends StatelessWidget {
           child: ElevatedButton(
             style: ElevatedButton.styleFrom(
               padding: EdgeInsets.only(top: 15, bottom: 15),
+              backgroundColor: value ? kPrimaryColor : kPrimaryColor.withOpacity(.5),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(30),
                 side: BorderSide(color: Colors.red),
               ),
-              primary: value ? kPrimaryColor : kPrimaryColor.withOpacity(.5),
             ),
             onPressed: onPressed,
             child: Text(

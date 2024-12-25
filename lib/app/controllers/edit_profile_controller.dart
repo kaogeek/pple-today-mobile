@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'dart:developer';
 import 'dart:io';
 import 'dart:typed_data';
 
@@ -91,5 +92,40 @@ class EditProfileController extends GetxController {
     );
 
     return response.isOk;
+  }
+
+  Future<bool> fetchDeleteAccountUser() async {
+    try {
+      String uid = _box.read(StorageKeys.uid) ?? '';
+      String mode = _box.read(StorageKeys.mode) ?? '';
+      String token = _box.read(StorageKeys.token) ?? '';
+
+      _service.deleteAccountUser(
+        uid: uid,
+        mode: mode,
+        token: token,
+      );
+
+      await 3.seconds.delay();
+
+      return true;
+/* 
+      Response response = await _service.deleteAccountUser(
+        uid: uid,
+        mode: mode,
+        token: token,
+      );
+
+      if (response.isOk) {
+        await _box.erase();
+
+        return true;
+      } else {
+        throw Exception(response.statusText ?? 'ขออภัย เกิดข้อผิดพลาดในการเชื่อมต่อระบบ');
+      } */
+    } catch (e) {
+      log('', error: e, name: 'FetchDeleteAccountUser');
+      return false;
+    }
   }
 }

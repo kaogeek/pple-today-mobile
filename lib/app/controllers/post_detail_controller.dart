@@ -32,6 +32,7 @@ class PostDetailController extends GetxController {
   final TextEditingController commentTextController = TextEditingController();
 
   bool isEdit = false;
+  var isLoadingReport = false.obs;
 
   String commentId = '';
 

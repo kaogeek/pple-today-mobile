@@ -16,7 +16,7 @@ import '../../../utils/storage_keys.dart';
 class TodayRecommendedUser extends GetWidget<TodayRecommendController> {
   final RecommendUserModel recommend;
 
-  const TodayRecommendedUser({Key? key, required this.recommend}) : super(key: key);
+  const TodayRecommendedUser({super.key, required this.recommend});
 
   @override
   Widget build(BuildContext context) {
@@ -45,16 +45,16 @@ class TodayRecommendedUser extends GetWidget<TodayRecommendController> {
                     padding: EdgeInsets.zero,
                     itemCount: controller.recommend.value.data!.length,
                     itemBuilder: (BuildContext context, int index) {
-                      final _data = controller.recommend.value.data![index];
+                      final data = controller.recommend.value.data![index];
 
                       return _buildCard(
                         index: index,
-                        imageUrl: _data.imageUrl ?? '',
-                        displayName: _data.displayName ?? _data.name ?? '',
-                        pageUsername: _data.pageUsername ?? '',
-                        isFollow: _data.isFollow ?? false,
-                        type: _data.type ?? '',
-                        pageId: _data.id ?? '',
+                        imageUrl: data.imageUrl ?? '',
+                        displayName: data.displayName ?? data.name ?? '',
+                        pageUsername: data.pageUsername ?? '',
+                        isFollow: data.isFollow ?? false,
+                        type: data.type ?? '',
+                        pageId: data.id ?? '',
                       );
                     },
                   )),
@@ -75,6 +75,8 @@ class TodayRecommendedUser extends GetWidget<TodayRecommendController> {
     return SizedBox(
       height: 88,
       child: Card(
+        elevation: 0,
+        color: Colors.white,
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
           child: GestureDetector(
@@ -152,13 +154,13 @@ class TodayRecommendedUser extends GetWidget<TodayRecommendController> {
                   child: ElevatedButton(
                     style: ElevatedButton.styleFrom(
                       shadowColor: Colors.transparent,
+                      backgroundColor: isFollow ? kPrimaryColor : Colors.white,
                       shape: const RoundedRectangleBorder(
                         borderRadius: BorderRadius.all(
                           Radius.circular(25),
                         ),
                         side: BorderSide(color: kPrimaryColor),
                       ),
-                      primary: isFollow ? kPrimaryColor : Colors.white,
                     ),
                     onPressed: () {
                       _onTapFollow(index);

@@ -11,7 +11,7 @@ import 'widgets/doing_ever_done.dart';
 import 'widgets/doing_month_ago.dart';
 
 class DoingPage extends GetView<DoingController> {
-  DoingPage({Key? key}) : super(key: key);
+  DoingPage({super.key});
 
   DashboardController dashboardController = Get.put(DashboardController());
 

@@ -20,17 +20,17 @@ class LogoutButton extends StatelessWidget {
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
           padding: const EdgeInsets.symmetric(vertical: 15),
+          backgroundColor: Colors.white,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(30),
             side: BorderSide(color: Colors.grey.shade300),
           ),
-          primary: Colors.white,
           shadowColor: Colors.transparent,
         ),
         onPressed: () async {
           await Get.defaultDialog(
             title: 'ออกจากระบบ',
-            content: Text(
+            content: const Text(
               'คุณต้องการออกจากระบบ ใช่หรือไม่',
               style: TextStyle(
                 fontFamily: Assets.assetsFontsAnakotmaiLight,
@@ -52,7 +52,7 @@ class LogoutButton extends StatelessWidget {
           );
           return;
         },
-        child: Text(
+        child: const Text(
           'ออกจากระบบ',
           style: TextStyle(
             fontSize: 18,
