@@ -10,15 +10,15 @@ class TopicCard extends GetWidget<FirstPageController> {
 
   @override
   Widget build(BuildContext context) {
-    final _sizeCardWidth = Get.width;
-    final _sizecardHeight = context.isPhone ? 480.0 : 720.0;
-    final _sizeTextTitle = context.isPhone ? 56.0 : 80.0;
-    final _sizeTextDate = context.isPhone ? 24.0 : 40.0;
-    final _sizedBGTextDate = context.isPhone ? 48.0 : 64.0;
+    final sizeCardWidth = Get.width;
+    final sizecardHeight = context.isPhone ? 480.0 : 720.0;
+    final sizeTextTitle = context.isPhone ? 56.0 : 80.0;
+    final sizeTextDate = context.isPhone ? 24.0 : 40.0;
+    final sizedBGTextDate = context.isPhone ? 48.0 : 64.0;
 
     return Obx(() {
       if (controller.firstPageModel.value.data?.today == null) return const SizedBox();
-
+      
       return GestureDetector(
         onTap: () {
           Get.toNamed(
@@ -33,8 +33,8 @@ class TopicCard extends GetWidget<FirstPageController> {
           children: [
             /// Background Image
             Container(
-              width: _sizeCardWidth,
-              height: _sizecardHeight,
+              width: sizeCardWidth,
+              height: sizecardHeight,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(12.0),
                 image: DecorationImage(
@@ -50,8 +50,8 @@ class TopicCard extends GetWidget<FirstPageController> {
 
             /// Content
             SizedBox(
-              width: _sizeCardWidth,
-              height: _sizecardHeight,
+              width: sizeCardWidth,
+              height: sizecardHeight,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
@@ -62,7 +62,7 @@ class TopicCard extends GetWidget<FirstPageController> {
                     overflow: TextOverflow.ellipsis,
                     style: TextStyle(
                       color: Colors.white,
-                      fontSize: _sizeTextTitle,
+                      fontSize: sizeTextTitle,
                       fontFamily: Assets.assetsFontsAnakotmaiMedium,
                       shadows: [
                         Shadow(
@@ -85,7 +85,7 @@ class TopicCard extends GetWidget<FirstPageController> {
                       ),
                     ),
                     width: double.infinity,
-                    height: _sizedBGTextDate,
+                    height: sizedBGTextDate,
                     child: Center(
                       child: Text(
                         controller.firstPageModel.value.data!.today!.date!,
@@ -93,7 +93,7 @@ class TopicCard extends GetWidget<FirstPageController> {
                         overflow: TextOverflow.ellipsis,
                         style: TextStyle(
                           color: Colors.white,
-                          fontSize: _sizeTextDate,
+                          fontSize: sizeTextDate,
                           fontFamily: Assets.assetsFontsAnakotmaiMedium,
                         ),
                       ),

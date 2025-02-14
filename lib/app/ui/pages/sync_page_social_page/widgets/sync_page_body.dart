@@ -10,7 +10,7 @@ import '../../../../routes/app_routes.dart';
 import '../../../utils/assets.dart';
 
 class SyncPageBody extends GetWidget<SyncPageSocialController> {
-  const SyncPageBody({Key? key}) : super(key: key);
+  const SyncPageBody({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -41,9 +41,9 @@ class SyncPageBody extends GetWidget<SyncPageSocialController> {
                   onPressed: () async {
                     Loading.show();
 
-                    final _value = await controller.loginFacebook();
+                    final value0 = await controller.loginFacebook();
 
-                    if (_value == LoginStatus.success) {
+                    if (value0 == LoginStatus.success) {
                       if ((controller.pageListFBModel.data ?? []).isEmpty) {
                         Loading.dismiss();
                         SnackBarComponent.show(
@@ -57,9 +57,11 @@ class SyncPageBody extends GetWidget<SyncPageSocialController> {
 
                       showBottomSheet(
                         context: context,
+                        backgroundColor: Colors.white,
                         builder: (context) {
-                          return SizedBox(
+                          return Container(
                             width: double.infinity,
+                            color: Colors.white,
                             child: Column(
                               children: [
                                 const Text(

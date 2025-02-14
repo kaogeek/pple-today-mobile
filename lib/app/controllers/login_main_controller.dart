@@ -1,8 +1,9 @@
-import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
 // import 'package:device_information/device_information.dart';
+import 'package:app_settings/app_settings.dart';
+import 'package:app_tracking_transparency/app_tracking_transparency.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
@@ -17,11 +18,11 @@ import '../component/my_dialog.dart';
 import '../component/snack_bar_component.dart';
 import '../data/models/check_email_user_model.dart';
 import '../data/models/login_email_model.dart';
-import '../data/models/login_facebook_model.dart';
 import '../data/models/result_login_model.dart';
 import '../data/models/user_data_social_model.dart';
 import '../data/services/user_service.dart';
 import '../routes/app_routes.dart';
+import '../ui/utils/assets.dart';
 import '../ui/utils/colors.dart';
 import '../ui/utils/enum.dart';
 import '../ui/utils/storage_keys.dart';
@@ -146,10 +147,8 @@ class LoginMainController extends GetxController {
   }
 
   Future<void> fetchLoginWithFacebook() async {
-    Loading.show();
-
     final userFB = await _firebaseLoginWithFacebook();
-    Loading.dismiss();
+
     if (errorCode.isNotEmpty) {
       SnackBarComponent.show(
         title: 'เกิดข้อผิดพลาด',
@@ -160,7 +159,7 @@ class LoginMainController extends GetxController {
     }
 
     if ((userFB.idToken ?? '').isEmpty) {
-      //   Loading.dismiss();
+      Loading.dismiss();
       return;
     }
 
@@ -380,61 +379,134 @@ class LoginMainController extends GetxController {
 
   Future<UserDataSocialModel> _firebaseLoginWithFacebook() async {
     try {
-      final facebookAuth = FacebookAuth.instance;
-
       userDataSocialModel.clear();
       errorCode = '';
       update();
-      await FirebaseAuth.instance.signOut();
+
+      if (Platform.isIOS) {
+        TrackingStatus status = await AppTrackingTransparency.trackingAuthorizationStatus;
+
+        // debugPrint("trackingAuth", wrapWidth: 1024);
+        if (status == TrackingStatus.notDetermined) {
+          //   debugPrint("request", wrapWidth: 1024);
+          status = await AppTrackingTransparency.requestTrackingAuthorization();
+        } else {
+          if (status != TrackingStatus.authorized) {
+            await Get.dialog(
+              AlertDialog(
+                title: Text(
+                  'การตั้งค่าความเป็นส่วนตัว',
+                  style: TextStyle(
+                    fontSize: Get.context!.isPhone ? 16 : 24,
+                    fontFamily: Assets.assetsFontsAnakotmaiMedium,
+                    color: Colors.black,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                content: Text(
+                  'เพื่อให้แอปพลิเคชันสามารถใช้งานได้อย่างเต็มประสิทธิภาพ กรุณาเปิดการใช้งานการติดตามข้อมูลในการตั้งค่าของอุปกรณ์',
+                  style: TextStyle(
+                    fontSize: Get.context!.isPhone ? 18 : 26,
+                    fontFamily: Assets.assetsFontsAnakotmaiLight,
+                    color: Colors.black54,
+                    // overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      Get.back();
+                    },
+                    child: Text(
+                      'ยกเลิก',
+                      style: TextStyle(
+                        fontSize: Get.context!.isPhone ? 16 : 24,
+                        fontFamily: Assets.assetsFontsAnakotmaiMedium,
+                        color: Colors.black,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: () async {
+                      Get.back();
+
+                      await AppSettings.openAppSettings(type: AppSettingsType.settings);
+                    },
+                    child: Text(
+                      'ตั้งค่า',
+                      style: TextStyle(
+                        fontSize: Get.context!.isPhone ? 16 : 24,
+                        fontFamily: Assets.assetsFontsAnakotmaiMedium,
+                        color: kPrimaryColor,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            );
+
+            return userDataSocialModel;
+          }
+        }
+      }
+
+      Loading.show();
+
+      final firebaseAuth = FirebaseAuth.instance;
+      final facebookAuth = FacebookAuth.instance;
+
+      await firebaseAuth.signOut();
       await facebookAuth.logOut();
 
-      final result = await facebookAuth.login();
-
-      final profile = await facebookAuth.getUserData();
-      debugPrint("profile : $profile", wrapWidth: 1024);
-
-      final tokenFB = result.accessToken?.tokenString ?? '';
-
-      if (tokenFB.isEmpty) return userDataSocialModel;
-      debugPrint("result.status : ${result.status}", wrapWidth: 1024);
+      final result = await facebookAuth.login(
+        permissions: ['email', 'public_profile'],
+        loginTracking: LoginTracking.enabled,
+      );
 
       if (result.status == LoginStatus.success) {
+        final tokenFB = result.accessToken?.tokenString ?? '';
+        debugPrint("tokenFB : $tokenFB", wrapWidth: 1024);
+
+        if (tokenFB.isEmpty) return userDataSocialModel;
+
         OAuthCredential credential = FacebookAuthProvider.credential(tokenFB);
 
-        await FirebaseAuth.instance.signInWithCredential(credential);
+        await firebaseAuth.signInWithCredential(credential);
 
-        String source = jsonEncode(profile);
-        var json = jsonDecode(source);
-        var loginFacebookModel = LoginFacebookModel.fromJson(json);
+        final profile = await facebookAuth.getUserData().timeout(const Duration(seconds: 10));
+        final id = profile['id'];
+        final name = profile['name'];
+        final email = profile['email'];
+        final imageUrl = profile['picture']['data']['url'];
 
         File imageFile = await ConvertImageComponent.imageNetworkToFile(
-          loginFacebookModel.picture!.data!.url!,
+          imageUrl,
         );
-
-        // DateTime? expiresTime = result.accessToken!.expiresAt;
-        // int expires = expiresTime.millisecondsSinceEpoch ~/ 1000;
-        // TODO: token expires facebook
         int expires = 100000;
 
         debugPrint('-- mode: FACEBOOK');
-        debugPrint('-- name: ${loginFacebookModel.name}');
-        debugPrint('-- email: ${loginFacebookModel.email}');
-        debugPrint('-- imageUrl: ${loginFacebookModel.picture!.data!.url}');
+        debugPrint('-- name: $name');
+        debugPrint('-- email: $email');
+        debugPrint('-- imageUrl: $imageUrl');
         debugPrint('-- imagePath: ${imageFile.path}');
         debugPrint('-- expires: $expires');
 
         userDataSocialModel = UserDataSocialModel(
-          name: loginFacebookModel.name,
-          uid: loginFacebookModel.id,
-          email: loginFacebookModel.email ?? '',
-          imageUrl: loginFacebookModel.picture?.data?.url ?? '',
+          uid: id,
+          name: name,
+          email: email,
+          imageUrl: imageUrl,
           imagePath: imageFile.path,
-          idToken: tokenFB, // result.accessToken!.tokenString,
+          idToken: tokenFB,
           expires: expires,
           mode: ModeType.facebook,
         );
       }
     } on FirebaseAuthException catch (e) {
+      debugPrint("e.code : ${e.code}", wrapWidth: 1024);
+      debugPrint("e.message : ${e.message}", wrapWidth: 1024);
       switch (e.code) {
         case "account-exists-with-different-credential":
           errorCode = "You already have an account with us. Use correct provider";
@@ -454,6 +526,8 @@ class LoginMainController extends GetxController {
       }
     } catch (e) {
       debugPrint("An unexpected error occurred: $e");
+    } finally {
+      Loading.dismiss();
     }
 
     update();

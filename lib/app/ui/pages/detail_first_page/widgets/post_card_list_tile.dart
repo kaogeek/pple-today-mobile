@@ -63,10 +63,10 @@ class PostCardListTile extends GetWidget<DetailFirstController> {
           (e) {
             return _subItemsPosts(
               context,
-              postId: e.post!.id!,
-              imageURL: e.coverPageSignUrl!,
-              title: e.post!.title!,
-              by: e.post!.page!.name!,
+              postId: e.post.id,
+              imageURL: e.coverPageSignUrl,
+              title: e.post.title,
+              by: e.post.page.name,
             );
           },
         ),
@@ -77,7 +77,7 @@ class PostCardListTile extends GetWidget<DetailFirstController> {
   }
 
   Widget _headingPost(BuildContext context, {required String postId}) {
-    final _imageSize = context.isPhone ? 400.0 : 600.0;
+    final imageSize = context.isPhone ? 400.0 : 600.0;
 
     return GestureDetector(
       onTap: () {
@@ -99,7 +99,7 @@ class PostCardListTile extends GetWidget<DetailFirstController> {
           /// Image Banner
           Container(
             width: Get.width,
-            height: _imageSize,
+            height: imageSize,
             decoration: BoxDecoration(
               color: Colors.grey.shade200,
               borderRadius: BorderRadius.circular(8.0),
@@ -107,12 +107,10 @@ class PostCardListTile extends GetWidget<DetailFirstController> {
             child: ClipRRect(
               borderRadius: BorderRadius.circular(8.0),
               child: Image.network(
-                _dataModel!.contents!.first.coverPageUrl != null
-                    ? ConvertImageComponent.getImages(imageURL: _dataModel!.contents!.first.coverPageUrl!)
-                    : Assets.placeholderPerson,
+                _dataModel!.contents!.first.coverPageUrl != null ? ConvertImageComponent.getImages(imageURL: _dataModel!.contents!.first.coverPageUrl!) : Assets.placeholderPerson,
                 fit: BoxFit.cover,
                 width: Get.width,
-                height: _imageSize,
+                height: imageSize,
                 loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
                   if (loadingProgress == null) return child;
                   return Center(
@@ -156,12 +154,12 @@ class PostCardListTile extends GetWidget<DetailFirstController> {
 
   Widget _subItemsPosts(
     BuildContext context, {
-    required String postId,
-    required String imageURL,
-    required String title,
-    required String by,
+    required String? postId,
+    required String? imageURL,
+    required String? title,
+    required String? by,
   }) {
-    final _imageSize = context.isPhone ? 88.0 : 160.0;
+    final imageSize = context.isPhone ? 88.0 : 160.0;
 
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -169,7 +167,7 @@ class PostCardListTile extends GetWidget<DetailFirstController> {
       children: [
         GestureDetector(
           onTap: () {
-            if (postId.isNotEmpty) {
+            if ((postId ?? '').isNotEmpty) {
               Get.toNamed(
                 AppRoutes.POST_DETAIL,
                 arguments: {
@@ -183,17 +181,18 @@ class PostCardListTile extends GetWidget<DetailFirstController> {
           child: Row(
             children: [
               /// Image
-              Container(
-                width: _imageSize,
-                height: _imageSize,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(12.0),
-                  image: DecorationImage(
-                    image: NetworkImage(imageURL),
-                    fit: BoxFit.cover,
+              if (imageURL != null)
+                Container(
+                  width: imageSize,
+                  height: imageSize,
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(12.0),
+                    image: DecorationImage(
+                      image: NetworkImage(imageURL),
+                      fit: BoxFit.cover,
+                    ),
                   ),
                 ),
-              ),
 
               /// Content
               Expanded(
@@ -204,27 +203,29 @@ class PostCardListTile extends GetWidget<DetailFirstController> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       /// Content
-                      Text(
-                        '$title' '\n',
-                        maxLines: 3,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          fontSize: context.isPhone ? 16 : 24,
-                          fontFamily: Assets.assetsFontsAnakotmaiMedium,
+                      if ((title ?? '').isNotEmpty)
+                        Text(
+                          '$title' '\n',
+                          maxLines: 3,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontSize: context.isPhone ? 16 : 24,
+                            fontFamily: Assets.assetsFontsAnakotmaiMedium,
+                          ),
                         ),
-                      ),
 
                       /// By
-                      Text(
-                        'โดย\t' '$by',
-                        maxLines: 1,
-                        overflow: TextOverflow.ellipsis,
-                        style: TextStyle(
-                          color: Colors.grey,
-                          fontSize: context.isPhone ? 12 : 18,
-                          fontFamily: Assets.assetsFontsAnakotmaiMedium,
+                      if ((by ?? '').isNotEmpty)
+                        Text(
+                          'โดย\t' '$by',
+                          maxLines: 1,
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            color: Colors.grey,
+                            fontSize: context.isPhone ? 12 : 18,
+                            fontFamily: Assets.assetsFontsAnakotmaiMedium,
+                          ),
                         ),
-                      ),
                     ],
                   ),
                 ),

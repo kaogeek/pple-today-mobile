@@ -1,6 +1,9 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:io';
 
+import 'package:app_settings/app_settings.dart';
+import 'package:app_tracking_transparency/app_tracking_transparency.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_facebook_auth/flutter_facebook_auth.dart';
 import 'package:get/get.dart';
@@ -9,6 +12,8 @@ import 'package:get_storage/get_storage.dart';
 import '../data/models/page_list_fb_mode.dart';
 import '../data/models/sync_page_model.dart';
 import '../data/services/sync_page_service.dart';
+import '../ui/utils/assets.dart';
+import '../ui/utils/colors.dart';
 import '../ui/utils/storage_keys.dart';
 
 class SyncPageSocialController extends GetxController {
@@ -23,16 +28,89 @@ class SyncPageSocialController extends GetxController {
 
   Future<LoginStatus> loginFacebook() async {
     try {
+      if (Platform.isIOS) {
+        TrackingStatus status = await AppTrackingTransparency.trackingAuthorizationStatus;
+
+        // debugPrint("trackingAuth", wrapWidth: 1024);
+        if (status == TrackingStatus.notDetermined) {
+          //   debugPrint("request", wrapWidth: 1024);
+          status = await AppTrackingTransparency.requestTrackingAuthorization();
+        } else {
+          if (status != TrackingStatus.authorized) {
+            await Get.dialog(
+              AlertDialog(
+                title: Text(
+                  'การตั้งค่าความเป็นส่วนตัว',
+                  style: TextStyle(
+                    fontSize: Get.context!.isPhone ? 16 : 24,
+                    fontFamily: Assets.assetsFontsAnakotmaiMedium,
+                    color: Colors.black,
+                    overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                content: Text(
+                  'เพื่อให้แอปพลิเคชันสามารถใช้งานได้อย่างเต็มประสิทธิภาพ กรุณาเปิดการใช้งานการติดตามข้อมูลในการตั้งค่าของอุปกรณ์',
+                  style: TextStyle(
+                    fontSize: Get.context!.isPhone ? 18 : 26,
+                    fontFamily: Assets.assetsFontsAnakotmaiLight,
+                    color: Colors.black54,
+                    // overflow: TextOverflow.ellipsis,
+                  ),
+                ),
+                actions: [
+                  TextButton(
+                    onPressed: () {
+                      Get.back();
+                    },
+                    child: Text(
+                      'ยกเลิก',
+                      style: TextStyle(
+                        fontSize: Get.context!.isPhone ? 16 : 24,
+                        fontFamily: Assets.assetsFontsAnakotmaiMedium,
+                        color: Colors.black,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ),
+                  TextButton(
+                    onPressed: () async {
+                      Get.back();
+
+                      await AppSettings.openAppSettings(type: AppSettingsType.settings);
+                    },
+                    child: Text(
+                      'ตั้งค่า',
+                      style: TextStyle(
+                        fontSize: Get.context!.isPhone ? 16 : 24,
+                        fontFamily: Assets.assetsFontsAnakotmaiMedium,
+                        color: kPrimaryColor,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            );
+
+            return LoginStatus.failed;
+          }
+        }
+      }
+
       final FacebookAuth facebookAuth = FacebookAuth.instance;
+
+      await facebookAuth.logOut();
+
       final LoginResult result = await facebookAuth.login(
-        loginBehavior: LoginBehavior.webOnly,
+        // loginBehavior: LoginBehavior.webOnly,
+        loginTracking: LoginTracking.enabled,
         permissions: const [
           'email',
           'public_profile',
           'pages_manage_metadata',
           'pages_manage_posts',
-          'pages_show_list',
           'pages_read_engagement',
+          'pages_show_list',
         ],
       );
 
